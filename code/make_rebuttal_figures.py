@@ -118,7 +118,7 @@ def fig_components() -> None:
                  f"registry ({rate(ref):.1f} %), baseline {rate(base):.1f} %\n"
                  f"deepseek-v4-flash, seed 0, n=38; bars = point estimate, "
                  f"lines = 95 % paired bootstrap", loc="left", fontsize=8.5)
-    fig.savefig(OUT / "fig_components.png"); plt.close(fig)
+    fig.savefig(OUT / "fig_components_v2.png"); plt.close(fig)
     print("fig_components:")
     for r in rows:
         print(f"  {r[0]:20s} arm {r[4]:5.1f}%  loss {r[1]:+6.1f}  "
@@ -163,7 +163,7 @@ def fig_schema() -> None:
     ax.set_title("Removing the schema zeroes the effect; changing the "
                  "typography does not\ndeepseek-v4-flash, seed 0, n=38",
                  loc="left", fontsize=8.5)
-    fig.savefig(OUT / "fig_schema.png"); plt.close(fig)
+    fig.savefig(OUT / "fig_schema_v2.png"); plt.close(fig)
     print("fig_schema:", [f"{l.splitlines()[0]}={v:.1f}"
                          for l, v in zip(labels, vals)])
 
@@ -229,7 +229,7 @@ def fig_mattools() -> None:
                  "benchmark's own verifier\nour no-retrieval arm is our own "
                  "prompt at temperature 0, above the benchmark's published "
                  "pure-agent 18.4 %", loc="left", fontsize=8.5)
-    fig.savefig(OUT / "fig_mattools.png"); plt.close(fig)
+    fig.savefig(OUT / "fig_mattools_v2.png"); plt.close(fig)
     print("fig_mattools:", [f"{l.splitlines()[0]}={v:.2f}"
                             for l, v in zip(labels, vals)])
 
@@ -258,7 +258,7 @@ def fig_panel() -> None:
                  f"({mean_o-mean_b:+.1f} pp), {len(rows)}/{len(rows)} positive, "
                  f"sign test p = {2**-len(rows):.4f}", loc="left", fontsize=8.5)
     ax.set_xlim(35, 100)
-    fig.savefig(OUT / "fig_panel.png"); plt.close(fig)
+    fig.savefig(OUT / "fig_panel_v2.png"); plt.close(fig)
     print(f"fig_panel: mean {mean_b:.2f} -> {mean_o:.2f} "
           f"({mean_o-mean_b:+.2f}), n={len(rows)}")
 

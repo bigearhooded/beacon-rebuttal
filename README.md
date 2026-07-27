@@ -23,7 +23,7 @@ code/        the scripts that produced them
 per-component ablation over aliases, examples, requires/produces metadata,
 related functions, dispatch virtual entries, and skills would clarify this."
 
-![components](figures/fig_components.png)
+![components](figures/fig_components_v2.png)
 
 Leave-one-out over the nine declared components. Each arm removes one component
 **from the retrieval signal as well as from the rendered output** — ablating
@@ -119,7 +119,7 @@ covering in the paper: the **schema** — which slots exist, i.e. what the
 decorator obliges an author to write down — and the **typography**, whether those
 slots print as labelled fields or as sentences.
 
-![schema](figures/fig_schema.png)
+![schema](figures/fig_schema_v2.png)
 
 `doc_RAG` is the schema ablation: real documentation on the same channel,
 declaring none of the seven slots. `prose_equivalent` is **not** a second schema
@@ -151,7 +151,7 @@ Code: `code/prose_render.py`, `code/verify_prose_parity.py`
 the small scikit-learn demonstration, especially for libraries with different
 state models?"
 
-![mattools](figures/fig_mattools.png)
+![mattools](figures/fig_mattools_v2.png)
 
 MatTools (arXiv:2505.10852) is a third-party benchmark over
 `pymatgen-analysis-defects`: 49 questions / 138 subtasks, each with its own
@@ -253,7 +253,7 @@ Code: `code/mattools_*.py`
 **Answers:** the concern that the main evidence is concentrated in one ecosystem,
 and the multi-seed caveat.
 
-![panel](figures/fig_panel.png)
+![panel](figures/fig_panel_v2.png)
 
 Completing multi-seed coverage and adding an eighth model moves the headline
 **+17.8 → +14.7 pp** while strengthening the distribution-free evidence: **8/8
