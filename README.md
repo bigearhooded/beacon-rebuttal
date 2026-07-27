@@ -68,34 +68,58 @@ Code: `code/ablate_lookup.py`
 
 ---
 
-## 2. What the doc-RAG baseline was, and what it isolates
+## 2. What the doc-RAG baseline was
 
 **Answers:** "How strong was the doc-RAG baseline? Please clarify the retriever,
 index granularity, indexed fields, and whether stronger BM25 or hybrid
 sparse/dense retrieval baselines were tested."
 
-![schema](figures/fig_schema.png)
-
 **Configuration as run.** Retriever `all-MiniLM-L6-v2` sentence embeddings,
-top-8. Index granularity: one document per public callable. Indexed fields: raw
-signature plus `inspect.getdoc` output. The retrieved block is injected into the
-identical prompt frame as the registry, so the two arms differ only in what the
+top-8 by cosine. Index granularity: one document per public callable. Indexed
+fields: raw signature plus `inspect.getdoc` output — the library's real
+documentation, nothing generated. The retrieved block is injected into the
+*identical* prompt frame as the registry, so the arms differ only in what the
 block contains. **No BM25 or hybrid sparse/dense variant was tested**, and we do
 not claim one.
 
-Building the third bar taught us that the word *structure* was covering two
-separate claims in our paper:
+The arm is not inert, and its size depends on the model (seed 0, n = 38):
 
-* the **schema** — which slots exist, i.e. what the decorator obliges an author
-  to write down;
-* the **typography** — whether those slots print as labelled fields or as
-  flowing sentences.
+| Model | baseline | no_registry | doc_RAG | +Beacon |
+|---|---:|---:|---:|---:|
+| `gpt-5.5` | 73.7 % | 63.2 % (−10.5) | 76.3 % (**+2.6**) | 97.4 % (+23.7) |
+| `deepseek-v4-flash` | 71.1 % | 84.2 % (+13.2) | 71.1 % (**+0.0**) | 92.1 % (+21.1) |
 
-`doc_RAG` is the schema ablation: the agent gets the library's real
-documentation, on the same retrieval channel, and it declares none of the seven
-slots. `prose_equivalent` is **not** a second schema ablation — the renderer
-(`code/prose_render.py`) keeps every one of the seven slots intact and distinct
-and changes only the punctuation.
+`no_registry` is the discipline prompt with the discovery channel removed;
+`doc_RAG` is the same channel serving the library's own docstrings instead of
+registry entries. The three columns separate prompt discipline, tool access with
+generic content, and registry content — and the split is model-dependent, which
+we report rather than average away. `no_registry` changes sign: a model that
+already has the competence receives prescriptions it has no channel to act on.
+
+A second data point on retrieval strength is in §3: 7,192 LLM-written documents
+over `pymatgen`, retrieved by the same embedding model into the same prompt
+frame, gain +6.1 against +14.3 for 98 registry entries.
+
+Data: `results/ablation/ablation_v4flash_doc_rag.csv`,
+`results/ablation/ablation_codex_doc_rag.csv`,
+`results/ablation/deepseek_v4flash_canonical.csv`
+
+---
+
+## 2b. The matched-information arm
+
+A reviewer asked for "the same information provided as ordinary natural-language
+documentation". Building it separated two things the word *structure* had been
+covering in the paper: the **schema** — which slots exist, i.e. what the
+decorator obliges an author to write down — and the **typography**, whether those
+slots print as labelled fields or as sentences.
+
+![schema](figures/fig_schema.png)
+
+`doc_RAG` is the schema ablation: real documentation on the same channel,
+declaring none of the seven slots. `prose_equivalent` is **not** a second schema
+ablation — the renderer (`code/prose_render.py`) keeps every one of the seven
+slots intact and distinct and changes only the punctuation.
 
 | Arm | Pass@1 | Δ | Schema | Typography |
 |---|---:|---:|---|---|
@@ -104,15 +128,14 @@ and changes only the punctuation.
 | `prose_equivalent` | 89.5 % | +18.4 | all seven slots | prose |
 | `+Beacon` | 92.1 % | +21.1 | all seven slots | labelled fields |
 
-Typography residual +2.2 pp, 95 % bootstrap CI [−4.8, +9.2], McNemar 7 v 4,
-p = 0.549.
+Seed 0 shown; across three seeds the typography residual is +2.2 pp, 95 %
+bootstrap CI [−4.8, +9.2], McNemar 7 v 4, p = 0.549.
 
-`code/verify_prose_parity.py` checks that the prose renderer is information-
-preserving: identical rank order on 15 queries, 890/890 facts carried, token
-count within 0.8 % under `o200k_base`.
+`code/verify_prose_parity.py` checks that the prose renderer is
+information-preserving: identical rank order on 15 queries, 890/890 facts
+carried, token count within 0.8 % under `o200k_base`.
 
-Data: `results/ablation/ablation_v4flash_doc_rag.csv`,
-`results/ablation/ablation_v4flash_prose.csv`
+Data: `results/ablation/ablation_v4flash_prose.csv`
 Code: `code/prose_render.py`, `code/verify_prose_parity.py`
 
 ---
