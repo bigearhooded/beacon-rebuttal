@@ -1,0 +1,26 @@
+paired on 49 tasks / 138 subtasks
+
+arm                                 corpus   subtask  vs own base  rounds
+------------------------------------------------------------------------------
+no retrieval (baseline)                  —    21.01%               1
+their 7192 docs · TF-cosine           7192    16.67%        -4.35  1
+their 7192 docs · MiniLM              7192    21.01%        +0.00  1
+registry 98 · TF-cosine                 98    31.88%       +10.87  1
+registry 98+tests · TF-cosine           98    34.78%       +13.77  1
+registry 263 · TF-cosine               263    27.54%        +6.52  1
+registry 263 · MiniLM                  263    26.81%        +5.80  1
+their pure agent (1 call)                —    17.87%               3
+their code RAG (5-iter loop)             —    34.78%       +16.91  1
+their LLM-doc RAG (5-iter loop)       7192    52.66%       +34.78  3
+
+
+Paired contrasts (10k bootstrap over tasks, sign test over tasks)
+
+our best registry vs our baseline                        +13.77  CI[+0.0,+29.8]  16v4 p=0.012   [CI includes 0]
+their corpus (best retriever) vs our baseline             +0.00  CI[-12.1,+12.3]  8v5 p=0.581   [CI includes 0]
+our registry vs their corpus, same retriever             +13.77  CI[+3.6,+25.9]  13v4 p=0.049
+our registry (1 call) vs their code RAG (5-iter loop)     +0.00  CI[-13.9,+13.6]  11v10 p=1.000   [CI includes 0]
+their LLM-doc RAG (5-iter loop) vs our registry (1 call) +17.87  CI[+6.3,+27.8]  18v5 p=0.011
+
+Published, for reference (their accuracy_summary.xlsx, 3-round mean):
+  pure agent 18.36%   code RAG 34.06%   LLM-doc RAG 55.31%
