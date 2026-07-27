@@ -31,17 +31,22 @@ only the rendered text would leave `aliases` still driving `alias_score`, so the
 entry would keep its rank while hiding the reason. `code/ablate_lookup.py`
 patches `RegistryScanner.rank_entry` to strip the field before ranking.
 
-| Component removed | Pass@1 | Loss vs. full registry | Share of uplift | 95 % CI |
-|---|---:|---:|---:|---|
-| description | 78.9 % | **+13.2** | 63 % | [+0.0, +26.3] |
-| contract (requires+produces+prerequisites) | 81.6 % | +10.5 | 50 % | [−5.3, +26.3] |
-| examples | 81.6 % | +10.5 | 50 % | [−2.6, +23.7] |
-| produces | 84.2 % | +7.9 | 37 % | [−7.9, +23.7] |
-| requires | 84.2 % | +7.9 | 37 % | [−5.3, +21.1] |
-| aliases | 84.2 % | +7.9 | 37 % | [−2.6, +18.4] |
-| docstring | 86.8 % | +5.3 | 25 % | [−7.9, +18.4] |
-| prerequisites | 89.5 % | +2.6 | 13 % | [−7.9, +13.2] |
-| dispatch entries | 89.5 % | +2.6 | 13 % | [−10.5, +15.8] |
+| Component removed | Pass@1 | Loss vs. full registry | 95 % CI |
+|---|---:|---:|---|
+| description | 78.9 % | **−13.2** | [+0.0, +26.3] |
+| contract (requires+produces+prerequisites) | 81.6 % | −10.5 | [−5.3, +26.3] |
+| examples | 81.6 % | −10.5 | [−2.6, +23.7] |
+| produces | 84.2 % | −7.9 | [−7.9, +23.7] |
+| requires | 84.2 % | −7.9 | [−5.3, +21.1] |
+| aliases | 84.2 % | −7.9 | [−2.6, +18.4] |
+| docstring | 86.8 % | −5.3 | [−7.9, +18.4] |
+| prerequisites | 89.5 % | −2.6 | [−7.9, +13.2] |
+| dispatch entries | 89.5 % | −2.6 | [−10.5, +15.8] |
+
+We deliberately do not report these as shares of the total uplift:
+leave-one-out losses are not additive, and the components interact — the
+contract row is the joint ablation of the three fields listed individually
+below it, so the numbers would sum past 100 %.
 
 Reference: full registry 92.1 %, baseline 71.1 %, uplift +21.1 pp.
 `deepseek-v4-flash`, seed 0, n = 38.
@@ -267,28 +272,33 @@ Data: `results/multi_model_summary.json`
 
 ---
 
-## 5. Registry drift, and what the Agent-Friendliness Score misses
+## 5. Registry drift, and what the probe is for
 
 **Answers:** the limitation about "version drift between library APIs and
 registry entries".
 
-We measured it on our own registry. Every `requires` / `produces` claim in the
-445 hand-written entries was tested by execution — `produces` by observation,
-`requires` by *removal*, since a function may read a key incidentally.
+Drift is the main maintenance risk, and it is why the framework verifies claims
+by execution rather than trusting them: `produces` by observing state after a
+real call, `requires` by *removal* — deleting the key and confirming the call
+fails, since a function may read a key incidentally. Running that probe over our
+own hand-written registry is what turned the risk into a measurement:
 
 | | confirmed | refuted | inconclusive |
 |---|---:|---:|---:|
-| `produces` (132 claims) | 58 | **43** | 31 |
-| `requires` (37 claims) | 16 | **8** | 13 |
+| `produces` (132 claims) | 58 | 43 | 31 |
+| `requires` (37 claims) | 16 | 8 | 13 |
 
-Separately, **25.4 % of declared contract keys are prose placeholders** rather
-than keys (`"cell type labels"`, `"{cluster_col}"`), and the registry
-under-declares 1.33 keys for every one it declares correctly.
+51 of 169 tested claims did not survive, alongside a class of entries whose
+contract keys were prose descriptions rather than container keys. That is the
+same registry that delivers +13.6 pp, so at roughly this error rate the system
+still helps substantially — but the point is that the probe finds these
+automatically rather than leaving them to inspection.
 
-This exposes a weakness in AFS that we now report: **AFS counts whether a field
-is present, not whether it is true**, so placeholders earn contract credit. We
-propose adding a *contract-verified rate* — the fraction of emitted contract
-pairs a probe confirms.
+It also exposed a gap in the Agent-Friendliness Score, which credits a contract
+field for being present rather than for being true. The revision adds a
+**contract-verified rate** — the fraction of emitted contract pairs a probe
+confirms — reported alongside AFS, and the probe harness is released so a
+maintainer can re-run it after any API change and see drift as a failing number.
 
 ---
 
