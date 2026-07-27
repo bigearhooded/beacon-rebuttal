@@ -1,0 +1,31 @@
+run_name: codex_abc
+description: |
+  Codex (gpt-5.5 via ChatGPT OAuth) sweep on A + B + C layers.
+  Two arms: codex_omicverse (with ov domain prompt) + codex_baseline.
+  No human_scanpy — that's already covered by the qwen3.6 sweeps.
+
+  Runs in parallel with any qwen3.6 sweep — separate LLM provider, no
+  contention. ~13 tasks × 2 arms = 26 trajectories.
+
+llm:
+  model: gpt-5.5
+  endpoint: "(unused — codex_oauth resolves via ~/.codex/auth.json)"
+  api_key_env: ""
+  temperature: 0.0
+
+agent:
+  max_agent_turns: 35
+
+scope:
+  systems: [codex_omicverse, codex_baseline]
+  task_ids: []
+  layers: [A, B, C]
+  difficulties: []
+  seeds: [0]
+  skip_completed: true
+
+paths:
+  trajectories_dir: trajectories
+  results_dir: results
+  workspace_dir: data/workspace
+  logs_dir: logs

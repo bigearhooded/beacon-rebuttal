@@ -1,0 +1,29 @@
+run_name: codex_f
+description: |
+  F-layer codex sweep (gpt-5.5 via ChatGPT OAuth) — codex_omicverse +
+  codex_baseline on F01-F02. 4 trajectories. Per-task wallclock budget:
+  900s (velocity dynamical fit + trajectory inference can take a few
+  minutes).
+
+llm:
+  model: gpt-5.5
+  endpoint: "(unused — codex_oauth resolves via ~/.codex/auth.json)"
+  api_key_env: ""
+  temperature: 0.0
+
+agent:
+  max_agent_turns: 30
+
+scope:
+  systems: [codex_omicverse, codex_baseline]
+  task_ids: []
+  layers: [F]
+  difficulties: []
+  seeds: [0]
+  skip_completed: true
+
+paths:
+  trajectories_dir: trajectories
+  results_dir: results
+  workspace_dir: data/workspace
+  logs_dir: logs

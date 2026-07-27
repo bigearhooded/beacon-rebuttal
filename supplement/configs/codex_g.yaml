@@ -1,0 +1,28 @@
+run_name: codex_g
+description: |
+  G-layer codex sweep (gpt-5.5 via ChatGPT OAuth) — codex_omicverse +
+  codex_baseline on G01-G04. 8 trajectories. Per-task wallclock budget:
+  600s (enforced by runner).
+
+llm:
+  model: gpt-5.5
+  endpoint: "(unused — codex_oauth resolves via ~/.codex/auth.json)"
+  api_key_env: ""
+  temperature: 0.0
+
+agent:
+  max_agent_turns: 25
+
+scope:
+  systems: [codex_omicverse, codex_baseline]
+  task_ids: []
+  layers: [G]
+  difficulties: []
+  seeds: [0]
+  skip_completed: true
+
+paths:
+  trajectories_dir: trajectories
+  results_dir: results
+  workspace_dir: data/workspace
+  logs_dir: logs

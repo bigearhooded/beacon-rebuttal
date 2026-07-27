@@ -1,0 +1,29 @@
+run_name: codex_e
+description: |
+  E-layer codex sweep (gpt-5.5 via ChatGPT OAuth) — codex_omicverse +
+  codex_baseline on E01-E05. 10 trajectories. Will share OAuth token
+  with any concurrent codex sweep (codex_abc); the refresh-on-401 retry
+  in CodexOauthModel handles incidental races.
+
+llm:
+  model: gpt-5.5
+  endpoint: "(unused — codex_oauth resolves via ~/.codex/auth.json)"
+  api_key_env: ""
+  temperature: 0.0
+
+agent:
+  max_agent_turns: 35
+
+scope:
+  systems: [codex_omicverse, codex_baseline]
+  task_ids: []
+  layers: [E]
+  difficulties: []
+  seeds: [0]
+  skip_completed: true
+
+paths:
+  trajectories_dir: trajectories
+  results_dir: results
+  workspace_dir: data/workspace
+  logs_dir: logs

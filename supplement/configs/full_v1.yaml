@@ -1,0 +1,28 @@
+run_name: full_v1
+description: |
+  v1.0 headline run: 21-task suite × 3 systems × 1 seed on qwen3.6:35b-a3b-256k.
+  ~5-7 hours. The treatment vs. control comparison is the two mini-swe
+  arms; human_scanpy is the deterministic ceiling reference.
+
+llm:
+  model: qwen3.6:35b-a3b-256k
+  endpoint: http://127.0.0.1:11434/v1
+  api_key_env: OLLAMA_API_KEY
+  temperature: 0.0
+
+agent:
+  max_agent_turns: 35
+
+scope:
+  systems: [mini_swe_omicverse, mini_swe_baseline, human_scanpy]
+  task_ids: []
+  layers: []
+  difficulties: []
+  seeds: [0]
+  skip_completed: true
+
+paths:
+  trajectories_dir: trajectories
+  results_dir: results
+  workspace_dir: data/workspace
+  logs_dir: logs

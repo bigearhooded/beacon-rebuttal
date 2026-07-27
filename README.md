@@ -13,7 +13,16 @@ in by hand.
 figures/     four PNGs, referenced from the responses
 results/     per-trajectory grades, MatTools scoring records, probe output
 code/        the scripts that produced them
+supplement/  the paper's supplementary material — see the note below
 ```
+
+> **The supplementary material.** The archive attached to the submission
+> contained only the NeurIPS LaTeX template and the checklist; the actual
+> supplement was not included. That was our packaging error, and it means the
+> fifty `§S` references in the manuscript pointed at something reviewers could
+> not open. `supplement/` here is the intended content: `supplement.pdf`
+> (§S0–§S10, 12 pages), the grader and benchmark source, all task
+> configurations, every system prompt, and the per-trajectory results.
 
 ---
 

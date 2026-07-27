@@ -1,0 +1,29 @@
+run_name: codex_l
+description: |
+  L-layer codex sweep (gpt-5.5 OAuth) on L01-L04. 4 tasks × 2 arms.
+  Pre-downloaded FM checkpoints under
+  <FM_CHECKPOINT_ROOT>/.
+  Per-task wallclock 1500s.
+
+llm:
+  model: gpt-5.5
+  endpoint: "(unused — codex_oauth resolves via ~/.codex/auth.json)"
+  api_key_env: ""
+  temperature: 0.0
+
+agent:
+  max_agent_turns: 25
+
+scope:
+  systems: [codex_omicverse, codex_baseline]
+  task_ids: []
+  layers: [L]
+  difficulties: []
+  seeds: [0]
+  skip_completed: true
+
+paths:
+  trajectories_dir: trajectories
+  results_dir: results
+  workspace_dir: data/workspace
+  logs_dir: logs
