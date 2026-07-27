@@ -146,15 +146,39 @@ helps" separable from "a model wrote itself a cheat sheet". The decorator never
 saw the library's test suite — the 49 tasks share names with 56 functions in it
 — and never saw a task prompt.
 
-| Arm | Corpus | Inference | Subtask acc. | Δ |
-|---|--:|---|--:|--:|
-| no retrieval | — | 1 call | 21.0 % | — |
-| their LLM-written docs | 7,192 | 1 call | 21.0 % | **+0.0** |
-| **our registry** | **98** | **1 call** | **34.8 %** | **+13.8** |
-| their LLM-written docs | 7,192 | 5-iteration loop | 50.7 % | +29.7 |
+Task accuracy — a question counts only when every property it asks for is
+correct, the stricter of the benchmark's two rates. All three arms use one model
+call, so the contrast is at matched inference budget:
 
-Registry vs. their corpus at matched budget: paired bootstrap CI [+3.6, +25.9],
-13 v 4 tasks, p = 0.049.
+| Arm | Corpus | Inference | Task acc. | Δ |
+|---|--:|---|--:|--:|
+| no retrieval | — | 1 call | 18.4 % (9/49) | — |
+| their LLM-written docs | 7,192 | 1 call | 24.5 % (12/49) | +6.1 |
+| **our registry** | **98** | **1 call** | **32.7 % (16/49)** | **+14.3** |
+
+Registry vs. baseline: paired bootstrap CI [+2.0, +26.5], 9 v 2 questions, sign
+test p = 0.065. Registry vs. their corpus: +8.2, CI [−6.1, +22.4], 8 v 4,
+p = 0.388 — reported as a point estimate and not as separation, since at 49
+questions that interval spans zero. What *is* separated is the entry count: 98
+curated entries against 7,192 generated documents over the same library.
+
+On the benchmark's other rate (subtask accuracy over 138 subtasks) the same three
+arms read 21.0 / 21.0 / 34.8 %. The registry's advantage holds on both; the
+corpus arm's does not. Both rates come from `code/mattools_rescore.py` and
+neither was selected after the fact — the figure and the headline use task
+accuracy throughout, and the subtask numbers are stated here so the choice is
+visible.
+
+**A coincidence worth naming.** Our no-retrieval arm's 18.4 % **task** accuracy
+is numerically almost identical to MatTools' published 18.36 % **subtask**
+accuracy for the same model. Different metrics that happen to coincide — our
+baseline is not a reproduction of theirs, and our prompt runs at temperature 0
+where theirs runs at 0.7.
+
+Their own five-iteration agent loop reaches 50.7 % subtask accuracy on their
+corpus. It is not plotted and not used as a comparator: it changes the inference
+procedure as well as the context, so it answers a different question from the one
+about cross-library transfer. It is reported below as a reproduction check.
 
 ### Reproducing their harness
 
