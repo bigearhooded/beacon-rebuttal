@@ -193,10 +193,14 @@ def fig_mattools() -> None:
                 ok += r["n_props"] - r["n_errors"]
         return 100 * ok / max(1, tot)
 
+    # The benchmark authors' own five-iteration agent loop is deliberately not
+    # plotted. The question this figure answers is whether the registry carries
+    # to another package, which is a matched-budget contrast among the three
+    # bars below; adding an arm that also changes the inference procedure would
+    # turn it into a leaderboard. That arm is reported in the README instead.
     bars = [("no retrieval\n(1 call)", "ours_mt2_baseline", MUTED),
             ("their 7,192 docs\n(1 call)", "ours_mt8_embed_theirs", ACCENT),
-            ("our registry, 98\n(1 call)", "ours_mt5_A2", FILL),
-            ("their 7,192 docs\n(5-iter loop)", "loop_theirs", "#7f8c8d")]
+            ("our registry, 98\n(1 call)", "ours_mt5_A2", FILL)]
     vals, labels, cols = [], [], []
     for label, lab, c in bars:
         v = acc(lab)
