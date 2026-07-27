@@ -217,6 +217,42 @@ corpus. It is not plotted and not used as a comparator: it changes the inference
 procedure as well as the context, so it answers a different question from the one
 about cross-library transfer. It is reported below as a reproduction check.
 
+### The registry itself
+
+`results/mattools_registry/` holds the artefacts, so the entries can be read
+rather than taken on description.
+
+| file | entries | what it is |
+|---|--:|---|
+| `semantic_A2_98.json` | 98 | the arm reported above and plotted in the figure |
+| `mechanical_98.json` | 98 | same callables, fields filled from signature and docstring alone, no model |
+| `wide_263.json` | 263 | wider scope, kept for the disclosure below |
+| `decorations_pymatgen.py` | 98 | the same entries rendered as `@register_function` calls |
+
+**We did not fork or patch `pymatgen-analysis-defects`.** For the benchmark the
+entries were served through a lookup tool from JSON, on the identical channel
+used for the `doc_RAG` arm and for the benchmark authors' own 7,192-document
+corpus, so the arms differ only in what the retrieved block contains. Modifying
+the library's source would have changed a second variable. `decorations_pymatgen.py`
+is a rendering of the same entries into the form a maintainer would paste in —
+it shows what adoption looks like; it is not what we ran.
+
+`produces` and `requires` are absent throughout. `pymatgen` adds and removes no
+named state — results are attributes on returned objects — so those two slots
+bind to nothing, and `key_results` names the attributes a caller reads instead.
+That substitution is the transfer boundary reported in the responses.
+
+**Scope selection.** The 263-entry `wide` variant was scoped by counting the
+imports appearing in the 49 task prompts, so a "263 beats 7,192" comparison
+would be contaminated by task-directed scope selection. The headline arm is
+therefore `semantic_A2`, whose 98 callables are the package's public defect-analysis
+surface, chosen without reading task prompts. `wide` is included so the discarded
+variant is inspectable, not hidden.
+
+Entries were written by `deepseek-v4-flash` from source, signature and docstring
+with no hand editing; the benchmark runs `gpt-4o`. The generator saw neither
+`pymatgen-analysis-defects/tests/` nor any task prompt (`code/mattools_decorate.py`).
+
 ### Reproducing their harness
 
 Two things had to be matched before any of this was comparable.
@@ -253,6 +289,7 @@ Execution is an isolated virtual environment rather than Docker; the pins,
 verifier and comparison logic are theirs.
 
 Data: `results/mattools/rescore_*.jsonl`, `results/mattools/mattools_final_table.txt`
+Registry: `results/mattools_registry/`
 Code: `code/mattools_*.py`
 
 ---

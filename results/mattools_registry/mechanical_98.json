@@ -1,0 +1,3706 @@
+[
+ {
+  "full_name": "pymatgen.analysis.defects.ccd.HarmonicDefect",
+  "short_name": "HarmonicDefect",
+  "module": "pymatgen.analysis.defects.ccd",
+  "kind": "class",
+  "signature": "(omega: 'float', charge_state: 'int', ispin: 'int', vrun: 'Vasprun | None' = None, distortions: 'Sequence[float] | None' = None, structures: 'Sequence[Structure] | None' = None, energies: 'Sequence[float] | None' = None, defect_band: 'Sequence[tuple] | None' = None, relaxed_index: 'int | None' = None, relaxed_bandstructure: 'BandStructure | None' = None, wswqs: 'list[dict] | None' = None, waveder: 'Waveder | None' = None) -> None",
+  "description": "A class representing the a harmonic defect vibronic state.",
+  "docstring": "A class representing the a harmonic defect vibronic state.\n\nThe vibronic part of a defect is often captured by a simple harmonic oscillator.\nThis class store a representation of the SHO as well as some additional information for book-keeping purposes.\n\nAttributes:\n    omega: The vibronic frequency of the phonon state in in the same units as the energy vs. Q plot.\n    charge_state: The charge of the defect.\n    ispin: The number of spin channels in the calculation (ISPIN from VASP).\n    vrun: The Vasprun object for the relaxed defect structure.\n    distortions: The distortion of the structure in units of amu^{-1/2} Angstrom^{-1}.\n        This object's internal reference for the distortion should always be relaxed structure.\n    structures: The list of structures that were used to compute the distortions.\n    energies: The potential energy surface obtained by distorting the structure.A\n    defect_band: The the index of the defect band since the defect for different\n        kpoints and spins presented as `[(band, kpt, spin), ...]`.\n    relaxed_indices: The indices of the relaxed defect structure.\n    relaxed_bandstructure: The band structure of the relaxed defect calculation.\n    wswqs: Dict of WSWQ objects for each distortion. The key is the distortion.\n    waveder: The Waveder object for the relaxed defect structure.",
+  "aliases": [
+   "HarmonicDefect",
+   "class",
+   "defect",
+   "harmonic",
+   "harmonic defect",
+   "harmonicdefect",
+   "representing",
+   "state"
+  ],
+  "examples": [
+   "from pymatgen.analysis.defects.ccd import HarmonicDefect, get_SRH_coefficient",
+   "from pymatgen.analysis.defects.ccd import HarmonicDefect"
+  ],
+  "surface": {
+   "properties": [
+    {
+     "name": "defect_band_index",
+     "doc": "The index of the defect band."
+    },
+    {
+     "name": "omega_eV",
+     "doc": "Get the vibronic frequency of the phonon state in (eV)."
+    },
+    {
+     "name": "relaxed_structure",
+     "doc": "The relaxed structure."
+    },
+    {
+     "name": "spin",
+     "doc": "The spin of the defect returned as an Spin Enum."
+    },
+    {
+     "name": "spin_index",
+     "doc": "The spin index of the defect."
+    }
+   ],
+   "methods": [
+    {
+     "name": "get_dielectric_function",
+     "signature": "(idir: 'int', jdir: 'int') -> 'tuple[npt.ArrayLike, npt.ArrayLike, npt.ArrayLike]'",
+     "doc": "Calculate the dielectric function."
+    },
+    {
+     "name": "get_elph_me",
+     "signature": "(defect_state: 'tuple') -> 'npt.ArrayLike'",
+     "doc": "Calculate the electron phonon matrix elements."
+    },
+    {
+     "name": "occupation",
+     "signature": "(t: 'npt.ArrayLike | float') -> 'npt.ArrayLike'",
+     "doc": "Calculate the phonon occupation."
+    },
+    {
+     "name": "read_wswqs",
+     "signature": "(directory: 'Path', distortions: 'Sequence[float] | None' = None) -> 'None'",
+     "doc": "Read the WSWQ files from a directory."
+    }
+   ]
+  },
+  "source": "docstring+tutorial",
+  "related": [
+   "get_SRH_coef",
+   "get_SRH_coefficient",
+   "get_dQ",
+   "get_localized_states",
+   "get_zfile"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.ccd.get_SRH_coef",
+  "short_name": "get_SRH_coef",
+  "module": "pymatgen.analysis.defects.ccd",
+  "kind": "function",
+  "signature": "(T: 'float | npt.ArrayLike', dQ: 'float', dE: 'float', omega_i: 'float', omega_f: 'float', elph_me: 'float', volume: 'float', g: 'int' = 1, occ_tol: 'float' = 0.001) -> 'npt.ArrayLike'",
+  "description": "Compute the SRH recombination Coefficient.",
+  "docstring": "Compute the SRH recombination Coefficient.\n\nArgs:\n    T: The temperature in Kelvin.\n    dQ: The displacement between the initial and final phonon states. In units of amu^{1/2} Angstrom.\n    dE: The energy difference between the initial and final phonon states. In units of eV.\n    omega_i: The initial phonon frequency in eV.\n    omega_f: The final phonon frequency in eV.\n    elph_me: The electron-phonon matrix element in units of eV amu^{-1/2} Angstrom^{-1}\n    volume: The volume of the simulation cell in Angstrom^3.\n    g: The degeneracy factor of the final state.\n    occ_tol : Ni is chosen so that (1 - occ_tol) of the total Bose-Einstein occupation is included.\n\nReturns:\n    Resulting capture coefficient (unscaled) in cm^3 s^{-1}",
+  "aliases": [
+   "coefficient",
+   "compute",
+   "get  s r h coef",
+   "get srh coef",
+   "get_SRH_coef",
+   "get_srh_coef",
+   "recombination"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "HarmonicDefect",
+   "get_SRH_coefficient",
+   "get_dQ",
+   "get_localized_states",
+   "get_zfile"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.ccd.get_SRH_coefficient",
+  "short_name": "get_SRH_coefficient",
+  "module": "pymatgen.analysis.defects.ccd",
+  "kind": "function",
+  "signature": "(initial_state: 'HarmonicDefect', final_state: 'HarmonicDefect', defect_state: 'tuple[int, int, int]', T: 'float | npt.ArrayLike', dE: 'float', g: 'int' = 1, occ_tol: 'float' = 0.001, n_band_edge: 'int' = 1, use_final_state_elph: 'bool' = False) -> 'npt.ArrayLike'",
+  "description": "Get the SRH coefficient for a defect.",
+  "docstring": "Get the SRH coefficient for a defect.\n\nArgs:\n    initial_state: The initial charge state of the defect.\n    final_state: The final charge state of the defect.\n    defect_state: The band, k-point, and spin of the defect.\n    T: The temperature in Kelvin.\n    dE: The energy difference between the defect and the band edge.\n    g: The degeneracy of the defect state.\n    occ_tol: The tolerance for determining if a state is occupied.\n    n_band_edge: The number of bands to average over at the band edge.\n    use_final_state_elph: Whether to use the final state's ELPH data.\n        This is useful if the initial state does not have a well-defined\n        defect state.\n\nReturns:\n    The SRH recombination coefficient in units of cm^3 s^-1.",
+  "aliases": [
+   "coefficient",
+   "defect",
+   "get  s r h coefficient",
+   "get srh coefficient",
+   "get_SRH_coefficient",
+   "get_srh_coefficient"
+  ],
+  "examples": [
+   "from pymatgen.analysis.defects.ccd import HarmonicDefect, get_SRH_coefficient",
+   "srh_c = get_SRH_coefficient(initial_state=hd0, final_state=hd1, defect_state=(138, 1, 1), T=T, dE=0.3"
+  ],
+  "surface": {},
+  "source": "docstring+tutorial",
+  "related": [
+   "HarmonicDefect",
+   "get_SRH_coef",
+   "get_dQ",
+   "get_localized_states",
+   "get_zfile"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.ccd.get_dQ",
+  "short_name": "get_dQ",
+  "module": "pymatgen.analysis.defects.ccd",
+  "kind": "function",
+  "signature": "(ground: 'Structure', excited: 'Structure') -> 'float'",
+  "description": "Calculate configuration coordinate difference.",
+  "docstring": "Calculate configuration coordinate difference.\n\nArgs:\n    ground : pymatgen structure corresponding to the ground (final) state\n    excited : pymatgen structure corresponding to the excited (initial) state\n\nReturns:\n    (float):  the dQ value (amu^{1/2} Angstrom)",
+  "aliases": [
+   "calculate",
+   "configuration",
+   "coordinate",
+   "difference",
+   "get d q",
+   "get dq",
+   "get_dQ",
+   "get_dq"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "HarmonicDefect",
+   "get_SRH_coef",
+   "get_SRH_coefficient",
+   "get_localized_states",
+   "get_zfile"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.ccd.get_localized_states",
+  "short_name": "get_localized_states",
+  "module": "pymatgen.analysis.defects.ccd",
+  "kind": "function",
+  "signature": "(bandstructure: 'BandStructure', procar: 'Procar', band_window: 'int' = 7) -> 'Generator[tuple[int, int, int, float], None, None]'",
+  "description": "Find the (band, kpt, spin) index of the most localized state.",
+  "docstring": "Find the (band, kpt, spin) index of the most localized state.\n\nFind the band index with the lowest inverse participation ratio (IPR) in a small window\naround the fermi level.  Since some of the core states can be very localized,\nwe should only search near the band edges.  Report the result for each k-point and spin channel.\n\nArgs:\n    bandstructure: The bandstructure object.\n        The band just below the fermi level is used as the center of band window.\n    procar: The procar object.\n    band_window: The number of bands above and blow the fermi level to include in the search window.\n\nReturns:\n    tuple(int, int, int): Returns the (band, kpt, spin) index of the most localized state.",
+  "aliases": [
+   "band",
+   "find",
+   "get localized states",
+   "get_localized_states",
+   "index",
+   "localized",
+   "most",
+   "spin"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "HarmonicDefect",
+   "get_SRH_coef",
+   "get_SRH_coefficient",
+   "get_dQ",
+   "get_zfile"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.ccd.get_zfile",
+  "short_name": "get_zfile",
+  "module": "pymatgen.analysis.defects.ccd",
+  "kind": "function",
+  "signature": "(directory: 'Path', base_name: 'str', allow_missing: 'bool' = False) -> 'Path | None'",
+  "description": "Find gzipped or non-gzipped versions of a file in a directory listing.",
+  "docstring": "Find gzipped or non-gzipped versions of a file in a directory listing.\n\nArgs:\n    directory : A list of files in a directory.\n    base_name : The base name of file file to find.\n    allow_missing : Whether to error if no version of the file (gzipped or un-gzipped) can be found.\n\nReturns:\n    Path | None: A path to the matched file. If ``allow_missing=True``\n    and the file cannot be found, then ``None`` will be returned.",
+  "aliases": [
+   "directory",
+   "file",
+   "find",
+   "get zfile",
+   "get_zfile",
+   "gzipped",
+   "listing",
+   "versions"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "HarmonicDefect",
+   "get_SRH_coef",
+   "get_SRH_coefficient",
+   "get_dQ",
+   "get_localized_states"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.ccd.plot_pes",
+  "short_name": "plot_pes",
+  "module": "pymatgen.analysis.defects.ccd",
+  "kind": "function",
+  "signature": "(hd: 'HarmonicDefect', x_shift: 'float' = 0, y_shift: 'float' = 0, width: 'float' = 1.0, ax: 'Axes' = None) -> 'None'",
+  "description": "Plot the Potential Energy Surface of a HarmonicDefect.",
+  "docstring": "Plot the Potential Energy Surface of a HarmonicDefect.\n\nArgs:\n    hd: HarmonicDefect object\n    x_shift: shift the PES by this amount in the x-direction\n    y_shift: shift the PES by this amount in the y-direction\n    width: the x-range for the PES plot\n    ax: matplotlib axes object\n\nReturns:\n    None",
+  "aliases": [
+   "energy",
+   "harmonicdefect",
+   "plot",
+   "plot pes",
+   "plot_pes",
+   "potential",
+   "surface"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "HarmonicDefect",
+   "get_SRH_coef",
+   "get_SRH_coefficient",
+   "get_dQ",
+   "get_localized_states"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.ccd.sort_positive_definite",
+  "short_name": "sort_positive_definite",
+  "module": "pymatgen.analysis.defects.ccd",
+  "kind": "function",
+  "signature": "(list_in: 'list', ref1: 'object', ref2: 'object', dist: 'Callable') -> 'tuple[tuple, tuple[float]]'",
+  "description": "Sort a list where we can only compute a positive-definite distance.",
+  "docstring": "Sort a list where we can only compute a positive-definite distance.\n\nSometimes, we can only compute a positive-definite distance between two objects.\n(E.g., the displacement between two structures). In these cases, standard\nsorting algorithms will not work. Here, we accept two reference points to give\nsome sense of direction. We then sort the list based on the distance between the\nreference points. Note: this only works if the list falls on a line of some sort.\n\nArgs:\n    list_in: The list to sort.\n    ref1: The first reference point, this will be the `zero` point.\n    ref2: The second reference point, this will determine the direction.\n    dist: Some positive definite distance function.\n\nReturns:\n    - the sorted list of objects.\n    - the signed distance in the chosen direction.",
+  "aliases": [
+   "compute",
+   "definite",
+   "distance",
+   "list",
+   "only",
+   "positive",
+   "sort",
+   "sort positive definite"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "HarmonicDefect",
+   "get_SRH_coef",
+   "get_SRH_coefficient",
+   "get_dQ",
+   "get_localized_states"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.core.Adsorbate",
+  "short_name": "Adsorbate",
+  "module": "pymatgen.analysis.defects.core",
+  "kind": "class",
+  "signature": "(structure: 'Structure', site: 'PeriodicSite', multiplicity: 'int' = 1, oxi_state: 'float | None' = None, equivalent_sites: 'list[PeriodicSite] | None' = None, symprec: 'float' = 0.01, angle_tolerance: 'float' = 5, user_charges: 'list[int] | None' = None) -> 'None'",
+  "description": "Subclass of Interstitial with a different name.",
+  "docstring": "Subclass of Interstitial with a different name.\n\nUsed for keeping track of adsorbate, which are treated the same\nalgorithmically as interstitials, but are conceptually separate.",
+  "aliases": [
+   "Adsorbate",
+   "adsorbate",
+   "different",
+   "interstitial",
+   "name",
+   "subclass"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [
+    {
+     "name": "centered_defect_structure",
+     "doc": "Get a defect structure that is centered around the site."
+    },
+    {
+     "name": "defect_site_index",
+     "doc": "Get the index of the defect in the structure."
+    },
+    {
+     "name": "defect_structure",
+     "doc": "Returns the defect structure."
+    },
+    {
+     "name": "defect_type",
+     "doc": "Get the defect type."
+    },
+    {
+     "name": "element_changes",
+     "doc": "Get the species changes of the intersitial defect."
+    },
+    {
+     "name": "latex_name",
+     "doc": "Get the latex name of the defect."
+    },
+    {
+     "name": "name",
+     "doc": "Returns a name for this defect."
+    },
+    {
+     "name": "symmetrized_structure",
+     "doc": "Get the symmetrized version of the bulk structure."
+    }
+   ],
+   "methods": [
+    {
+     "name": "get_charge_states",
+     "signature": "(padding: 'int' = 1) -> 'list[int]'",
+     "doc": "Potential charge states for a given oxidation state."
+    },
+    {
+     "name": "get_multiplicity",
+     "signature": "() -> 'int'",
+     "doc": "Determine the multiplicity of the defect site within the structure."
+    },
+    {
+     "name": "get_supercell_structure",
+     "signature": "(sc_mat: 'np.ndarray | None' = None, defect_structure: 'Structure | None' = None, dummy_species: 'str | None' = None, min_atoms: 'int' = 80, max_atoms: 'int' = 240, min_length: 'float' = 10.0, force_diagonal: 'bool' = False, relax_radius: 'float | str | None' = None, perturb: 'float | None' = None, target_frac_coords: 'np.ndarray | None' = None, return_site: 'bool' = False) -> 'Structure'",
+     "doc": "Generate the supercell for a defect."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "Defect",
+   "DefectComplex",
+   "DefectType",
+   "Interstitial",
+   "NamedDefect"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.core.Defect",
+  "short_name": "Defect",
+  "module": "pymatgen.analysis.defects.core",
+  "kind": "class",
+  "signature": "(structure: 'Structure', site: 'PeriodicSite', multiplicity: 'int | None' = None, oxi_state: 'float | None' = None, equivalent_sites: 'list[PeriodicSite] | None' = None, symprec: 'float' = 0.01, angle_tolerance: 'float' = 5, user_charges: 'list[int] | None' = None) -> 'None'",
+  "description": "Abstract class for a single point defect.",
+  "docstring": "Abstract class for a single point defect.",
+  "aliases": [
+   "Defect",
+   "abstract",
+   "class",
+   "defect",
+   "point",
+   "single"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [
+    {
+     "name": "centered_defect_structure",
+     "doc": "Get a defect structure that is centered around the site."
+    },
+    {
+     "name": "defect_structure",
+     "doc": "Get the unit-cell structure representing the defect."
+    },
+    {
+     "name": "defect_type",
+     "doc": "Get the defect type."
+    },
+    {
+     "name": "element_changes",
+     "doc": "Get the species changes of the defect."
+    },
+    {
+     "name": "latex_name",
+     "doc": "Get the latex name of the defect."
+    },
+    {
+     "name": "name",
+     "doc": "Name of the defect."
+    },
+    {
+     "name": "symmetrized_structure",
+     "doc": "Get the symmetrized version of the bulk structure."
+    }
+   ],
+   "methods": [
+    {
+     "name": "get_charge_states",
+     "signature": "(padding: 'int' = 1) -> 'list[int]'",
+     "doc": "Potential charge states for a given oxidation state."
+    },
+    {
+     "name": "get_multiplicity",
+     "signature": "() -> 'int'",
+     "doc": "Get the multiplicity of the defect."
+    },
+    {
+     "name": "get_supercell_structure",
+     "signature": "(sc_mat: 'np.ndarray | None' = None, defect_structure: 'Structure | None' = None, dummy_species: 'str | None' = None, min_atoms: 'int' = 80, max_atoms: 'int' = 240, min_length: 'float' = 10.0, force_diagonal: 'bool' = False, relax_radius: 'float | str | None' = None, perturb: 'float | None' = None, target_frac_coords: 'np.ndarray | None' = None, return_site: 'bool' = False) -> 'Structure'",
+     "doc": "Generate the supercell for a defect."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "Adsorbate",
+   "DefectComplex",
+   "DefectType",
+   "Interstitial",
+   "NamedDefect"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.core.DefectComplex",
+  "short_name": "DefectComplex",
+  "module": "pymatgen.analysis.defects.core",
+  "kind": "class",
+  "signature": "(defects: 'list[Defect]', oxi_state: 'float | None' = None) -> 'None'",
+  "description": "A complex of defects.",
+  "docstring": "A complex of defects.",
+  "aliases": [
+   "DefectComplex",
+   "complex",
+   "defect complex",
+   "defectcomplex",
+   "defects"
+  ],
+  "examples": [
+   "from pymatgen.analysis.defects.core import DefectComplex, Substitution, Vacancy",
+   "def_comp0 = DefectComplex(defects=[mg_ga_defect0, vac_defect1])",
+   "def_comp1 = DefectComplex(defects=[mg_ga_defect1, vac_defect1])"
+  ],
+  "surface": {
+   "properties": [
+    {
+     "name": "centered_defect_structure",
+     "doc": "Get a defect structure that is centered around the site."
+    },
+    {
+     "name": "defect_structure",
+     "doc": "Returns the defect structure."
+    },
+    {
+     "name": "defect_structure_with_com",
+     "doc": "Returns the defect structure with the center of mass as dummy site."
+    },
+    {
+     "name": "defect_type",
+     "doc": "Get the defect type."
+    },
+    {
+     "name": "element_changes",
+     "doc": "Determine the species changes of the complex defect."
+    },
+    {
+     "name": "latex_name",
+     "doc": "Get the latex name of the defect."
+    },
+    {
+     "name": "name",
+     "doc": "Name of the defect."
+    },
+    {
+     "name": "symmetrized_structure",
+     "doc": "Get the symmetrized version of the bulk structure."
+    }
+   ],
+   "methods": [
+    {
+     "name": "get_charge_states",
+     "signature": "(padding: 'int' = 1) -> 'list[int]'",
+     "doc": "Potential charge states for a given oxidation state."
+    },
+    {
+     "name": "get_multiplicity",
+     "signature": "() -> 'int'",
+     "doc": "Determine the multiplicity of the defect site within the structure."
+    },
+    {
+     "name": "get_supercell_structure",
+     "signature": "(sc_mat: 'np.ndarray | None' = None, defect_structure: 'Structure | None' = None, dummy_species: 'str | None' = None, min_atoms: 'int' = 80, max_atoms: 'int' = 240, min_length: 'float' = 10.0, force_diagonal: 'bool' = False, relax_radius: 'float | str | None' = None, perturb: 'float | None' = None, target_frac_coords: 'np.ndarray | None' = None, return_site: 'bool' = False) -> 'Structure'",
+     "doc": "Generate the supercell for a defect."
+    }
+   ]
+  },
+  "source": "docstring+tutorial",
+  "related": [
+   "Adsorbate",
+   "Defect",
+   "DefectType",
+   "Interstitial",
+   "NamedDefect"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.core.DefectType",
+  "short_name": "DefectType",
+  "module": "pymatgen.analysis.defects.core",
+  "kind": "class",
+  "signature": "(value, names=None, *, module=None, qualname=None, type=None, start=1)",
+  "description": "Defect type, for sorting purposes.",
+  "docstring": "Defect type, for sorting purposes.",
+  "aliases": [
+   "DefectType",
+   "defect",
+   "defect type",
+   "defecttype",
+   "purposes",
+   "sorting",
+   "type"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [],
+   "methods": []
+  },
+  "source": "docstring",
+  "related": [
+   "Adsorbate",
+   "Defect",
+   "DefectComplex",
+   "Interstitial",
+   "NamedDefect"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.core.Interstitial",
+  "short_name": "Interstitial",
+  "module": "pymatgen.analysis.defects.core",
+  "kind": "class",
+  "signature": "(structure: 'Structure', site: 'PeriodicSite', multiplicity: 'int' = 1, oxi_state: 'float | None' = None, equivalent_sites: 'list[PeriodicSite] | None' = None, symprec: 'float' = 0.01, angle_tolerance: 'float' = 5, user_charges: 'list[int] | None' = None) -> 'None'",
+  "description": "Interstitial Defect.",
+  "docstring": "Interstitial Defect.",
+  "aliases": [
+   "Interstitial",
+   "defect",
+   "interstitial"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [
+    {
+     "name": "centered_defect_structure",
+     "doc": "Get a defect structure that is centered around the site."
+    },
+    {
+     "name": "defect_site_index",
+     "doc": "Get the index of the defect in the structure."
+    },
+    {
+     "name": "defect_structure",
+     "doc": "Returns the defect structure."
+    },
+    {
+     "name": "defect_type",
+     "doc": "Get the defect type."
+    },
+    {
+     "name": "element_changes",
+     "doc": "Get the species changes of the intersitial defect."
+    },
+    {
+     "name": "latex_name",
+     "doc": "Get the latex name of the defect."
+    },
+    {
+     "name": "name",
+     "doc": "Name of the defect."
+    },
+    {
+     "name": "symmetrized_structure",
+     "doc": "Get the symmetrized version of the bulk structure."
+    }
+   ],
+   "methods": [
+    {
+     "name": "get_charge_states",
+     "signature": "(padding: 'int' = 1) -> 'list[int]'",
+     "doc": "Potential charge states for a given oxidation state."
+    },
+    {
+     "name": "get_multiplicity",
+     "signature": "() -> 'int'",
+     "doc": "Determine the multiplicity of the defect site within the structure."
+    },
+    {
+     "name": "get_supercell_structure",
+     "signature": "(sc_mat: 'np.ndarray | None' = None, defect_structure: 'Structure | None' = None, dummy_species: 'str | None' = None, min_atoms: 'int' = 80, max_atoms: 'int' = 240, min_length: 'float' = 10.0, force_diagonal: 'bool' = False, relax_radius: 'float | str | None' = None, perturb: 'float | None' = None, target_frac_coords: 'np.ndarray | None' = None, return_site: 'bool' = False) -> 'Structure'",
+     "doc": "Generate the supercell for a defect."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "Adsorbate",
+   "Defect",
+   "DefectComplex",
+   "DefectType",
+   "NamedDefect"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.core.NamedDefect",
+  "short_name": "NamedDefect",
+  "module": "pymatgen.analysis.defects.core",
+  "kind": "class",
+  "signature": "(name: 'str', bulk_formula: 'str', element_changes: 'dict') -> 'None'",
+  "description": "Class for defect definition without the UC structure.",
+  "docstring": "Class for defect definition without the UC structure.\n\nThe defect is defined only by its name. For complexes the name\nshould be created with \"+\" between the individual defects.\n\n.. note::\n    This class is only used to help aggregate defects calculated\n    outside of our framework so a ``Defect`` object is missing.\n    The object will not have any mechanism for generating supercells\n    or guessing oxidation states.  It is simply a placeholder to help\n    with the grouping logic of the Formation Energy diagram analysis.",
+  "aliases": [
+   "NamedDefect",
+   "class",
+   "defect",
+   "definition",
+   "named defect",
+   "nameddefect",
+   "structure",
+   "without"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [
+    {
+     "name": "latex_name",
+     "doc": "Get the latex name of the defect."
+    }
+   ],
+   "methods": []
+  },
+  "source": "docstring",
+  "related": [
+   "Adsorbate",
+   "Defect",
+   "DefectComplex",
+   "DefectType",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.core.Substitution",
+  "short_name": "Substitution",
+  "module": "pymatgen.analysis.defects.core",
+  "kind": "class",
+  "signature": "(structure: 'Structure', site: 'PeriodicSite', multiplicity: 'int | None' = None, oxi_state: 'float | None' = None, equivalent_sites: 'list[PeriodicSite] | None' = None, symprec: 'float' = 0.01, angle_tolerance: 'float' = 5, user_charges: 'list[int] | None' = None) -> 'None'",
+  "description": "Single-site substitutional defects.",
+  "docstring": "Single-site substitutional defects.",
+  "aliases": [
+   "Substitution",
+   "defects",
+   "single",
+   "site",
+   "substitution",
+   "substitutional"
+  ],
+  "examples": [
+   "from pymatgen.analysis.defects.core import Substitution",
+   "mg_ga = Substitution(structure=gan_struct, site=mg_site)",
+   "from pymatgen.analysis.defects.core import DefectComplex, Substitution, Vacancy"
+  ],
+  "surface": {
+   "properties": [
+    {
+     "name": "centered_defect_structure",
+     "doc": "Get a defect structure that is centered around the site."
+    },
+    {
+     "name": "defect_site",
+     "doc": "Returns the site in the structure that corresponds to the defect site."
+    },
+    {
+     "name": "defect_site_index",
+     "doc": "Get the index of the defect in the structure."
+    },
+    {
+     "name": "defect_structure",
+     "doc": "Returns the defect structure."
+    },
+    {
+     "name": "defect_type",
+     "doc": "Get the defect type."
+    },
+    {
+     "name": "element_changes",
+     "doc": "Get the species changes of the substitution defect."
+    },
+    {
+     "name": "latex_name",
+     "doc": "Get the latex name of the defect."
+    },
+    {
+     "name": "name",
+     "doc": "Name of the defect."
+    },
+    {
+     "name": "symmetrized_structure",
+     "doc": "Get the symmetrized version of the bulk structure."
+    }
+   ],
+   "methods": [
+    {
+     "name": "get_charge_states",
+     "signature": "(padding: 'int' = 1) -> 'list[int]'",
+     "doc": "Potential charge states for a given oxidation state."
+    },
+    {
+     "name": "get_multiplicity",
+     "signature": "() -> 'int'",
+     "doc": "Returns the multiplicity of a defect site within the structure."
+    },
+    {
+     "name": "get_supercell_structure",
+     "signature": "(sc_mat: 'np.ndarray | None' = None, defect_structure: 'Structure | None' = None, dummy_species: 'str | None' = None, min_atoms: 'int' = 80, max_atoms: 'int' = 240, min_length: 'float' = 10.0, force_diagonal: 'bool' = False, relax_radius: 'float | str | None' = None, perturb: 'float | None' = None, target_frac_coords: 'np.ndarray | None' = None, return_site: 'bool' = False) -> 'Structure'",
+     "doc": "Generate the supercell for a defect."
+    }
+   ]
+  },
+  "source": "docstring+tutorial",
+  "related": [
+   "Adsorbate",
+   "Defect",
+   "DefectComplex",
+   "DefectType",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.core.Vacancy",
+  "short_name": "Vacancy",
+  "module": "pymatgen.analysis.defects.core",
+  "kind": "class",
+  "signature": "(structure: 'Structure', site: 'PeriodicSite', multiplicity: 'int | None' = None, oxi_state: 'float | None' = None, equivalent_sites: 'list[PeriodicSite] | None' = None, symprec: 'float' = 0.01, angle_tolerance: 'float' = 5, user_charges: 'list[int] | None' = None) -> 'None'",
+  "description": "Class representing a vacancy defect.",
+  "docstring": "Class representing a vacancy defect.",
+  "aliases": [
+   "Vacancy",
+   "class",
+   "defect",
+   "representing",
+   "vacancy"
+  ],
+  "examples": [
+   "from pymatgen.analysis.defects.core import DefectComplex, Substitution, Vacancy",
+   "vac_defect0 = Vacancy(structure=bulk, site=mg_site0)",
+   "vac_defect1 = Vacancy(structure=bulk, site=n_site0)"
+  ],
+  "surface": {
+   "properties": [
+    {
+     "name": "centered_defect_structure",
+     "doc": "Get a defect structure that is centered around the site."
+    },
+    {
+     "name": "defect_site",
+     "doc": "Returns the site in the structure that corresponds to the defect site."
+    },
+    {
+     "name": "defect_site_index",
+     "doc": "Get the index of the defect in the structure."
+    },
+    {
+     "name": "defect_structure",
+     "doc": "Returns the defect structure with the proper oxidation state."
+    },
+    {
+     "name": "defect_type",
+     "doc": "Get the defect type."
+    },
+    {
+     "name": "element_changes",
+     "doc": "Get the species changes of the vacancy defect."
+    },
+    {
+     "name": "latex_name",
+     "doc": "Get the latex name of the defect."
+    },
+    {
+     "name": "name",
+     "doc": "Name of the defect."
+    },
+    {
+     "name": "symmetrized_structure",
+     "doc": "Get the symmetrized version of the bulk structure."
+    }
+   ],
+   "methods": [
+    {
+     "name": "get_charge_states",
+     "signature": "(padding: 'int' = 1) -> 'list[int]'",
+     "doc": "Potential charge states for a given oxidation state."
+    },
+    {
+     "name": "get_multiplicity",
+     "signature": "() -> 'int'",
+     "doc": "Returns the multiplicity of a defect site within the structure."
+    },
+    {
+     "name": "get_supercell_structure",
+     "signature": "(sc_mat: 'np.ndarray | None' = None, defect_structure: 'Structure | None' = None, dummy_species: 'str | None' = None, min_atoms: 'int' = 80, max_atoms: 'int' = 240, min_length: 'float' = 10.0, force_diagonal: 'bool' = False, relax_radius: 'float | str | None' = None, perturb: 'float | None' = None, target_frac_coords: 'np.ndarray | None' = None, return_site: 'bool' = False) -> 'Structure'",
+     "doc": "Generate the supercell for a defect."
+    }
+   ]
+  },
+  "source": "docstring+tutorial",
+  "related": [
+   "Adsorbate",
+   "Defect",
+   "DefectComplex",
+   "DefectType",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.core.center_structure",
+  "short_name": "center_structure",
+  "module": "pymatgen.analysis.defects.core",
+  "kind": "function",
+  "signature": "(structure: 'Structure', ref_fpos: 'ArrayLike') -> 'Structure'",
+  "description": "Shift the sites around a center.",
+  "docstring": "Shift the sites around a center.\n\nMove all the sites in the structure so that they\nare in the periodic image closest to the reference fractional position.\n\nArgs:\n    structure: The structure to be centered.\n    ref_fpos: The reference fractional position that will be set to the center.",
+  "aliases": [
+   "around",
+   "center",
+   "center structure",
+   "center_structure",
+   "shift",
+   "sites"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Adsorbate",
+   "Defect",
+   "DefectComplex",
+   "DefectType",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.core.get_element",
+  "short_name": "get_element",
+  "module": "pymatgen.analysis.defects.core",
+  "kind": "function",
+  "signature": "(sp_el: 'Species | Element') -> 'Element'",
+  "description": "Get the element from a species or element.",
+  "docstring": "Get the element from a species or element.",
+  "aliases": [
+   "element",
+   "get element",
+   "get_element",
+   "species"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Adsorbate",
+   "Defect",
+   "DefectComplex",
+   "DefectType",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.core.get_plane_spacing",
+  "short_name": "get_plane_spacing",
+  "module": "pymatgen.analysis.defects.core",
+  "kind": "function",
+  "signature": "(lattice: 'npt.NDArray') -> 'list[float]'",
+  "description": "Compute the plane spacing of a lattice.",
+  "docstring": "Compute the plane spacing of a lattice.\n\nGet the cartesian spacing between periodic planes of a unit cell.\nCopied from materialsproject/pyrho.\n\n>>> get_plane_spacing([[1,0,0], [1,1,0], [0,0,2]])\n[0.7653..., 1.042..., 2.0]\n\nArgs:\nlattice:\n    List of lattice vectors in cartesian coordinates\n\nReturns:\nList[float]:\n    List where the k-th element is is the spacing of planes generated by all\n    lattice vectors EXCEPT the k-th one",
+  "aliases": [
+   "compute",
+   "get plane spacing",
+   "get_plane_spacing",
+   "lattice",
+   "plane",
+   "spacing"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Adsorbate",
+   "Defect",
+   "DefectComplex",
+   "DefectType",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.core.get_sc_fromstruct",
+  "short_name": "get_sc_fromstruct",
+  "module": "pymatgen.analysis.defects.core",
+  "kind": "function",
+  "signature": "(base_struct: 'Structure', min_atoms: 'int' = 80, max_atoms: 'int' = 240, min_length: 'float' = 10.0, force_diagonal: 'bool' = False) -> 'NDArray | ArrayLike | None'",
+  "description": "Generate the best supercell from a unitcell.",
+  "docstring": "Generate the best supercell from a unitcell.\n\nThe CubicSupercellTransformation from PMG is much faster but don't iterate over as\nmany supercell configurations so it's less able to find the best configuration in a\ngiven cell size. We try the PMG's cubic supercell transformation first and if it fails\nwe will use the `find_optimal_cell_shape` function from ASE which is much slower but\nexhaustive.\n\nArgs:\n    base_struct: structure of the unit cell\n    max_atoms: Maximum number of atoms allowed in the supercell.\n    min_atoms: Minimum number of atoms allowed in the supercell.\n    min_length: Minimum length of the smallest supercell lattice vector.\n    force_diagonal: If True, return a transformation with a diagonal transformation matrix.\n\nReturns:\n    struc_sc: Supercell that is as close to cubic as possible",
+  "aliases": [
+   "best",
+   "generate",
+   "get sc fromstruct",
+   "get_sc_fromstruct",
+   "supercell",
+   "unitcell"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Adsorbate",
+   "Defect",
+   "DefectComplex",
+   "DefectType",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.core.get_vacancy",
+  "short_name": "get_vacancy",
+  "module": "pymatgen.analysis.defects.core",
+  "kind": "function",
+  "signature": "(structure: 'Structure', isite: 'int', **kwargs) -> 'Vacancy'",
+  "description": "Get a vacancy defect from a structure and site index.",
+  "docstring": "Get a vacancy defect from a structure and site index.\n\nConvenience function for creating a Vacancy object quickly.\n\nArgs:\n    structure: The structure to create the vacancy in.\n    isite: The site index of the vacancy.\n    **kwargs: Keyword arguments to pass to Vacancy constructor.",
+  "aliases": [
+   "defect",
+   "get vacancy",
+   "get_vacancy",
+   "index",
+   "site",
+   "structure",
+   "vacancy"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Adsorbate",
+   "Defect",
+   "DefectComplex",
+   "DefectType",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.core.perturb_sites",
+  "short_name": "perturb_sites",
+  "module": "pymatgen.analysis.defects.core",
+  "kind": "function",
+  "signature": "(structure: 'Structure', distance: 'float', min_distance: 'float | None' = None, site_indices: 'list | None' = None) -> 'None'",
+  "description": "Performs a random perturbation.",
+  "docstring": "Performs a random perturbation.\n\nPerturb the sites in a structure to break symmetry.  This is useful for\nfinding energy minimum configurations.\n\nArgs:\n    structure (Structure): Input structure.\n    distance (float): Distance in angstroms by which to perturb each\n        site.\n    min_distance (None, int, or float): if None, all displacements will\n        be equal amplitude. If int or float, perturb each site a\n        distance drawn from the uniform distribution between\n        'min_distance' and 'distance'.\n    site_indices (list): List of site indices on which to perform the\n        perturbation. If None, all sites will be perturbed.",
+  "aliases": [
+   "performs",
+   "perturb sites",
+   "perturb_sites",
+   "perturbation",
+   "random"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Adsorbate",
+   "Defect",
+   "DefectComplex",
+   "DefectType",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.core.update_structure",
+  "short_name": "update_structure",
+  "module": "pymatgen.analysis.defects.core",
+  "kind": "function",
+  "signature": "(structure: 'Structure', site: 'PeriodicSite', defect_type: 'DefectType') -> 'None'",
+  "description": "Update the structure with the defect site.",
+  "docstring": "Update the structure with the defect site.\n\nTypes of operations:\n    1. Vacancy: remove the site.\n    2. Substitution: replace the site with the defect species.\n    3. Interstitial: insert the defect species at the site.\n\nArgs:\n    structure: The structure to be updated.\n    site: The defect site.\n    defect_type: The type of the defect.\n\nReturns:\n    Structure: The updated structure.",
+  "aliases": [
+   "defect",
+   "site",
+   "structure",
+   "update",
+   "update structure",
+   "update_structure"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Adsorbate",
+   "Defect",
+   "DefectComplex",
+   "DefectType",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.finder.DefectSiteFinder",
+  "short_name": "DefectSiteFinder",
+  "module": "pymatgen.analysis.defects.finder",
+  "kind": "class",
+  "signature": "(symprec: 'float' = 0.01, angle_tolerance: 'float' = 5.0) -> 'None'",
+  "description": "Find the location of a defect with no pior knowledge.",
+  "docstring": "Find the location of a defect with no pior knowledge.",
+  "aliases": [
+   "DefectSiteFinder",
+   "defect",
+   "defect site finder",
+   "defectsitefinder",
+   "find",
+   "knowledge",
+   "location",
+   "pior"
+  ],
+  "examples": [
+   "from pymatgen.analysis.defects.finder import DefectSiteFinder",
+   "finder = DefectSiteFinder()"
+  ],
+  "surface": {
+   "properties": [],
+   "methods": [
+    {
+     "name": "get_defect_fpos",
+     "signature": "(defect_structure: 'Structure', base_structure: 'Structure', remove_oxi: 'bool' = True) -> 'ArrayLike'",
+     "doc": "Get the position of a defect in the pristine structure."
+    },
+    {
+     "name": "get_impurity_position",
+     "signature": "(defect_structure: 'Structure', base_structure: 'Structure') -> 'ArrayLike'",
+     "doc": "Get the position of an impurity defect."
+    },
+    {
+     "name": "get_most_distorted_sites",
+     "signature": "(defect_structure: 'Structure', base_structure: 'Structure') -> 'list[tuple[int, float]]'",
+     "doc": "Identify the set of sites with the most deviation from the pristine."
+    },
+    {
+     "name": "get_native_defect_position",
+     "signature": "(defect_structure: 'Structure', base_structure: 'Structure') -> 'ArrayLike'",
+     "doc": "Get the position of a native defect in the defect structure."
+    }
+   ]
+  },
+  "source": "docstring+tutorial",
+  "related": [
+   "SiteGroup",
+   "SiteVec",
+   "best_match",
+   "cosine_similarity",
+   "get_site_groups"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.finder.SiteGroup",
+  "short_name": "SiteGroup",
+  "module": "pymatgen.analysis.defects.finder",
+  "kind": "class",
+  "signature": "(species: ForwardRef('str'), similar_sites: ForwardRef('list[int]'), vec: ForwardRef('NDArray'))",
+  "description": "NamedTuple representing a group of symmetrically equivalent sites.",
+  "docstring": "NamedTuple representing a group of symmetrically equivalent sites.",
+  "aliases": [
+   "SiteGroup",
+   "equivalent",
+   "group",
+   "namedtuple",
+   "representing",
+   "site group",
+   "sitegroup",
+   "sites"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [],
+   "methods": [
+    {
+     "name": "count",
+     "signature": "(value, /)",
+     "doc": "Return number of occurrences of value."
+    },
+    {
+     "name": "index",
+     "signature": "(value, start=0, stop=9223372036854775807, /)",
+     "doc": "Return first index of value."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "DefectSiteFinder",
+   "SiteVec",
+   "best_match",
+   "cosine_similarity",
+   "get_site_groups"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.finder.SiteVec",
+  "short_name": "SiteVec",
+  "module": "pymatgen.analysis.defects.finder",
+  "kind": "class",
+  "signature": "(species: ForwardRef('str'), site: ForwardRef('Structure'), vec: ForwardRef('NDArray'))",
+  "description": "NamedTuple representing a site in the defect structure.",
+  "docstring": "NamedTuple representing a site in the defect structure.",
+  "aliases": [
+   "SiteVec",
+   "defect",
+   "namedtuple",
+   "representing",
+   "site",
+   "site vec",
+   "sitevec",
+   "structure"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [],
+   "methods": [
+    {
+     "name": "count",
+     "signature": "(value, /)",
+     "doc": "Return number of occurrences of value."
+    },
+    {
+     "name": "index",
+     "signature": "(value, start=0, stop=9223372036854775807, /)",
+     "doc": "Return first index of value."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "DefectSiteFinder",
+   "SiteGroup",
+   "best_match",
+   "cosine_similarity",
+   "get_site_groups"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.finder.best_match",
+  "short_name": "best_match",
+  "module": "pymatgen.analysis.defects.finder",
+  "kind": "function",
+  "signature": "(sv: 'SiteVec', sgs: 'list[SiteGroup]') -> 'tuple[SiteGroup, float]'",
+  "description": "Find the best match for a site in the defect structure.",
+  "docstring": "Find the best match for a site in the defect structure.\n\nArgs:\n    sv: SiteVec namedtuples representing a site in the defect structure\n    sgs: List of SiteGroup namedtuples representing groups of\n    symmetrically equivalent sites in the pristine structure\n\nReturns:\n    SiteGroup: The group that represents the best match for ``sv``\n    float: The cosine similarity between ``sv`` and the best match",
+  "aliases": [
+   "best",
+   "best match",
+   "best_match",
+   "defect",
+   "find",
+   "match",
+   "site",
+   "structure"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "DefectSiteFinder",
+   "SiteGroup",
+   "SiteVec",
+   "cosine_similarity",
+   "get_site_groups"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.finder.cosine_similarity",
+  "short_name": "cosine_similarity",
+  "module": "pymatgen.analysis.defects.finder",
+  "kind": "function",
+  "signature": "(vec1: 'ArrayLike', vec2: 'ArrayLike') -> 'float'",
+  "description": "Cosine similarity between two vectors.",
+  "docstring": "Cosine similarity between two vectors.\n\nArgs:\n    vec1: First vector\n    vec2: Second vector\n\nReturns:\n    float: Cosine similarity between the two vectors",
+  "aliases": [
+   "between",
+   "cosine",
+   "cosine similarity",
+   "cosine_similarity",
+   "similarity",
+   "vectors"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "DefectSiteFinder",
+   "SiteGroup",
+   "SiteVec",
+   "best_match",
+   "get_site_groups"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.finder.get_site_groups",
+  "short_name": "get_site_groups",
+  "module": "pymatgen.analysis.defects.finder",
+  "kind": "function",
+  "signature": "(struct: 'Structure', symprec: 'float' = 0.01, angle_tolerance: 'float' = 5.0) -> 'list[SiteGroup]'",
+  "description": "Group the sites in the structure by symmetry.",
+  "docstring": "Group the sites in the structure by symmetry.\n\nGroup the sites in the structure by symmetry and return a\nlist of ``SiteGroup`` namedtuples.\n\nArgs:\n    struct: Structure object to be analyzed\n    symprec: Symmetry precision passed to SpacegroupAnalyzer\n    angle_tolerance: Angle tolerance passed to SpacegroupAnalyzer\n\nReturns:\n    List[SiteGroup]: List of SiteGroup namedtuples representing groups of\n    symmetrically equivalent sites",
+  "aliases": [
+   "get site groups",
+   "get_site_groups",
+   "group",
+   "sites",
+   "structure",
+   "symmetry"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "DefectSiteFinder",
+   "SiteGroup",
+   "SiteVec",
+   "best_match",
+   "cosine_similarity"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.finder.get_site_vecs",
+  "short_name": "get_site_vecs",
+  "module": "pymatgen.analysis.defects.finder",
+  "kind": "function",
+  "signature": "(struct: 'Structure') -> 'list[SiteVec]'",
+  "description": "Get the SiteVec representation of each site in the structure.",
+  "docstring": "Get the SiteVec representation of each site in the structure.\n\nArgs:\n    struct: Structure object to compute the site vectors (SOAP).\n\nReturns:\n    List[SiteVec]: List of SiteVec representing each site in the structure.",
+  "aliases": [
+   "each",
+   "get site vecs",
+   "get_site_vecs",
+   "representation",
+   "site",
+   "sitevec",
+   "structure"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "DefectSiteFinder",
+   "SiteGroup",
+   "SiteVec",
+   "best_match",
+   "cosine_similarity"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.finder.get_soap_vec",
+  "short_name": "get_soap_vec",
+  "module": "pymatgen.analysis.defects.finder",
+  "kind": "function",
+  "signature": "(struct: 'Structure') -> 'NDArray'",
+  "description": "Get the SOAP vector for each site in the structure.",
+  "docstring": "Get the SOAP vector for each site in the structure.\n\nArgs:\n    struct: Structure object to compute the SOAP vector for\n\nReturns:\n    NDArray: SOAP vector for each site in the structure,\n        shape (n_sites, n_soap_features)",
+  "aliases": [
+   "each",
+   "get soap vec",
+   "get_soap_vec",
+   "site",
+   "soap",
+   "structure",
+   "vector"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "DefectSiteFinder",
+   "SiteGroup",
+   "SiteVec",
+   "best_match",
+   "cosine_similarity"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.finder.get_weighted_average_position",
+  "short_name": "get_weighted_average_position",
+  "module": "pymatgen.analysis.defects.finder",
+  "kind": "function",
+  "signature": "(lattice: 'Lattice', frac_positions: 'ArrayLike', weights: 'ArrayLike | None' = None) -> 'NDArray'",
+  "description": "Get the weighted average position of a set of positions in frac coordinates.",
+  "docstring": "Get the weighted average position of a set of positions in frac coordinates.\n\nThe algorithm starts at position with the highest weight, and gradually moves\nthe average point by finding the closest image of each additional position to the\naverage point. This can be used to find the center of mass of a group of sites in a\nmolecule in CH3NH3PbI3 (Note: Since the average positions in periodic system is not\nunique, this algorithm only works if the collection of positions is significantly\nsmaller than the unit cell.)\n\nArgs:\n-------\n    lattice (Lattice): The lattice of the structure.\n    frac_positions (3xN array-like): The positions to average.\n    weights (1xN array-like): The weights of the positions.\n\nReturns:\n-------\n    NDArray: (3x1 array): The weighted average position in fractional coordinates.",
+  "aliases": [
+   "average",
+   "coordinates",
+   "frac",
+   "get weighted average position",
+   "get_weighted_average_position",
+   "position",
+   "positions",
+   "weighted"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "DefectSiteFinder",
+   "SiteGroup",
+   "SiteVec",
+   "best_match",
+   "cosine_similarity"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.generators.AntiSiteGenerator",
+  "short_name": "AntiSiteGenerator",
+  "module": "pymatgen.analysis.defects.generators",
+  "kind": "class",
+  "signature": "(symprec: 'float' = 0.01, angle_tolerance: 'float' = 5) -> 'None'",
+  "description": "Generator of all anti-site defects.",
+  "docstring": "Generator of all anti-site defects.\n\nAttributes:\n    symprec:  Tolerance for symmetry finding (parameter for ``SpacegroupAnalyzer``).\n    angle_tolerance: Angle tolerance for symmetry finding (parameter for ``SpacegroupAnalyzer``).",
+  "aliases": [
+   "AntiSiteGenerator",
+   "anti",
+   "anti site generator",
+   "antisitegenerator",
+   "defects",
+   "generator",
+   "site"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [],
+   "methods": [
+    {
+     "name": "generate",
+     "signature": "(structure: 'Structure', **kwargs) -> 'Generator[Substitution, None, None]'",
+     "doc": "Generate anti-site defects."
+    },
+    {
+     "name": "get_defects",
+     "signature": "(*args, **kwargs) -> 'list[Defect]'",
+     "doc": "Alias for self.generate."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "ChargeInterstitialGenerator",
+   "DefectGenerator",
+   "Interstitial",
+   "InterstitialGenerator"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.generators.ChargeInsertionAnalyzer",
+  "short_name": "ChargeInsertionAnalyzer",
+  "module": "pymatgen.analysis.defects.generators",
+  "kind": "class",
+  "signature": "(chgcar: 'VolumetricData', working_ion: 'str' = 'Li', clustering_tol: 'float' = 0.5, ltol: 'float' = 0.2, stol: 'float' = 0.3, angle_tol: 'float' = 5, min_dist: 'float' = 0.9) -> 'None'",
+  "description": "Object for insertions sites from charge density.",
+  "docstring": "Object for insertions sites from charge density.\n\nAnalyze the charge density and create new candidate structures by inserting at each charge minima\nThe similar inserterd structures are given the same uniqueness label.\n\n.. note::\n    The charge density analysis works best with AECCAR data since CHGCAR data\n    often contains spurious local minima in the core. However you can still use CHGCAR\n    with an appropriate ``max_avg_charge`` value.\n\n    Since the user might want to rerun their analysis with different ``avg_charge`` and\n    ``max_avg_charge`` values, we will generate and store all the ion-inserted structure\n    and their uniqueness labels first and allow the user to get the filtered and labeled results.\n\n    If you use this code please cite the following paper:\n    J.-X. Shen et al.: npj Comput. Mater. 6, 1 (2020)\n    https://www.nature.com/articles/s41524-020-00422-3\n\nAttributes:\n    chgcar: The charge density object to analyze\n    working_ion: The working ion to be inserted\n    clustering_tol: Distance tolerance for grouping sites together\n    ltol: StructureMatcher ltol parameter\n    stol: StructureMatcher stol parameter\n    angle_tol: StructureMatcher angle_tol parameter\n    min_dist: Minimum distance between sites and the host atoms in \u00c5.",
+  "aliases": [
+   "ChargeInsertionAnalyzer",
+   "charge",
+   "charge insertion analyzer",
+   "chargeinsertionanalyzer",
+   "density",
+   "insertions",
+   "object",
+   "sites"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [],
+   "methods": [
+    {
+     "name": "filter_and_group",
+     "signature": "(avg_radius: 'float' = 0.4, max_avg_charge: 'float' = 1.0) -> 'list[tuple[float, list[list[float]]]]'",
+     "doc": "Filter and group the insertion sites by average charge."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "AntiSiteGenerator",
+   "ChargeInterstitialGenerator",
+   "DefectGenerator",
+   "Interstitial",
+   "InterstitialGenerator"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.generators.ChargeInterstitialGenerator",
+  "short_name": "ChargeInterstitialGenerator",
+  "module": "pymatgen.analysis.defects.generators",
+  "kind": "class",
+  "signature": "(clustering_tol: 'float' = 0.6, ltol: 'float' = 0.2, stol: 'float' = 0.3, angle_tol: 'float' = 5, min_dist: 'float' = 1.0, avg_radius: 'float' = 0.4, max_avg_charge: 'float' = 0.9, max_insertions: 'int | None' = None) -> 'None'",
+  "description": "Generator of interstitiald defects.",
+  "docstring": "Generator of interstitiald defects.\n\nAttributes:\n    clustering_tol: Tolerance for clustering see :meth:`pymatgen.analysis.defects.utils.cluster_nodes`.\n    ltol: Tolerance for lattice parameter matching\n    stol: Tolerance for site matching\n    angle_tol: Tolerance for angles in degrees\n    min_dist: Minimum to atoms in the host structure\n    avg_radius: The radius around each local minima used to evaluate the average charge.\n    max_avg_charge: The maximum average charge to accept.\n    max_insertions: The maximum number of insertion sites to consider.\n        Will choose the sites with the lowest average charge.",
+  "aliases": [
+   "ChargeInterstitialGenerator",
+   "charge interstitial generator",
+   "chargeinterstitialgenerator",
+   "defects",
+   "generator",
+   "interstitiald"
+  ],
+  "examples": [
+   "cig = ChargeInterstitialGenerator()"
+  ],
+  "surface": {
+   "properties": [],
+   "methods": [
+    {
+     "name": "generate",
+     "signature": "(chgcar: 'VolumetricData', insert_species: 'set[str] | list[str]', **kwargs) -> 'Generator[Interstitial, None, None]'",
+     "doc": "Generate interstitials."
+    },
+    {
+     "name": "get_defects",
+     "signature": "(*args, **kwargs) -> 'list[Defect]'",
+     "doc": "Alias for self.generate."
+    }
+   ]
+  },
+  "source": "docstring+tutorial",
+  "related": [
+   "AntiSiteGenerator",
+   "ChargeInsertionAnalyzer",
+   "DefectGenerator",
+   "Interstitial",
+   "InterstitialGenerator"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.generators.DefectGenerator",
+  "short_name": "DefectGenerator",
+  "module": "pymatgen.analysis.defects.generators",
+  "kind": "class",
+  "signature": "()",
+  "description": "Abstract class for a defect generator.",
+  "docstring": "Abstract class for a defect generator.",
+  "aliases": [
+   "DefectGenerator",
+   "abstract",
+   "class",
+   "defect",
+   "defect generator",
+   "defectgenerator",
+   "generator"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [],
+   "methods": [
+    {
+     "name": "generate",
+     "signature": "(*args, **kwargs) -> 'Generator[Defect, None, None]'",
+     "doc": "Generate a defect."
+    },
+    {
+     "name": "get_defects",
+     "signature": "(*args, **kwargs) -> 'list[Defect]'",
+     "doc": "Alias for self.generate."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "AntiSiteGenerator",
+   "ChargeInsertionAnalyzer",
+   "ChargeInterstitialGenerator",
+   "Interstitial",
+   "InterstitialGenerator"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.generators.Interstitial",
+  "short_name": "Interstitial",
+  "module": "pymatgen.analysis.defects.generators",
+  "kind": "class",
+  "signature": "(structure: 'Structure', site: 'PeriodicSite', multiplicity: 'int' = 1, oxi_state: 'float | None' = None, equivalent_sites: 'list[PeriodicSite] | None' = None, symprec: 'float' = 0.01, angle_tolerance: 'float' = 5, user_charges: 'list[int] | None' = None) -> 'None'",
+  "description": "Interstitial Defect.",
+  "docstring": "Interstitial Defect.",
+  "aliases": [
+   "Interstitial",
+   "defect",
+   "interstitial"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [
+    {
+     "name": "centered_defect_structure",
+     "doc": "Get a defect structure that is centered around the site."
+    },
+    {
+     "name": "defect_site_index",
+     "doc": "Get the index of the defect in the structure."
+    },
+    {
+     "name": "defect_structure",
+     "doc": "Returns the defect structure."
+    },
+    {
+     "name": "defect_type",
+     "doc": "Get the defect type."
+    },
+    {
+     "name": "element_changes",
+     "doc": "Get the species changes of the intersitial defect."
+    },
+    {
+     "name": "latex_name",
+     "doc": "Get the latex name of the defect."
+    },
+    {
+     "name": "name",
+     "doc": "Name of the defect."
+    },
+    {
+     "name": "symmetrized_structure",
+     "doc": "Get the symmetrized version of the bulk structure."
+    }
+   ],
+   "methods": [
+    {
+     "name": "get_charge_states",
+     "signature": "(padding: 'int' = 1) -> 'list[int]'",
+     "doc": "Potential charge states for a given oxidation state."
+    },
+    {
+     "name": "get_multiplicity",
+     "signature": "() -> 'int'",
+     "doc": "Determine the multiplicity of the defect site within the structure."
+    },
+    {
+     "name": "get_supercell_structure",
+     "signature": "(sc_mat: 'np.ndarray | None' = None, defect_structure: 'Structure | None' = None, dummy_species: 'str | None' = None, min_atoms: 'int' = 80, max_atoms: 'int' = 240, min_length: 'float' = 10.0, force_diagonal: 'bool' = False, relax_radius: 'float | str | None' = None, perturb: 'float | None' = None, target_frac_coords: 'np.ndarray | None' = None, return_site: 'bool' = False) -> 'Structure'",
+     "doc": "Generate the supercell for a defect."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "AntiSiteGenerator",
+   "ChargeInsertionAnalyzer",
+   "ChargeInterstitialGenerator",
+   "DefectGenerator",
+   "InterstitialGenerator"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.generators.InterstitialGenerator",
+  "short_name": "InterstitialGenerator",
+  "module": "pymatgen.analysis.defects.generators",
+  "kind": "class",
+  "signature": "(min_dist: 'float' = 0.5) -> 'None'",
+  "description": "Generator of interstitiald defects.",
+  "docstring": "Generator of interstitiald defects.\n\nAttributes:\n    min_dist: Minimum distance between an interstitial and the nearest atom.",
+  "aliases": [
+   "InterstitialGenerator",
+   "defects",
+   "generator",
+   "interstitial generator",
+   "interstitiald",
+   "interstitialgenerator"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [],
+   "methods": [
+    {
+     "name": "generate",
+     "signature": "(structure: 'Structure', insertions: 'dict[str, Sequence[Sequence[float]]]', multiplicities: 'dict[str, Sequence[int]] | None' = None, equivalent_positions: 'dict[str, Sequence[Sequence[Sequence[float]]]] | None' = None, **kwargs) -> 'Generator[Interstitial, None, None]'",
+     "doc": "Generate interstitials."
+    },
+    {
+     "name": "get_defects",
+     "signature": "(*args, **kwargs) -> 'list[Defect]'",
+     "doc": "Alias for self.generate."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "AntiSiteGenerator",
+   "ChargeInsertionAnalyzer",
+   "ChargeInterstitialGenerator",
+   "DefectGenerator",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.generators.Substitution",
+  "short_name": "Substitution",
+  "module": "pymatgen.analysis.defects.generators",
+  "kind": "class",
+  "signature": "(structure: 'Structure', site: 'PeriodicSite', multiplicity: 'int | None' = None, oxi_state: 'float | None' = None, equivalent_sites: 'list[PeriodicSite] | None' = None, symprec: 'float' = 0.01, angle_tolerance: 'float' = 5, user_charges: 'list[int] | None' = None) -> 'None'",
+  "description": "Single-site substitutional defects.",
+  "docstring": "Single-site substitutional defects.",
+  "aliases": [
+   "Substitution",
+   "defects",
+   "single",
+   "site",
+   "substitution",
+   "substitutional"
+  ],
+  "examples": [
+   "from pymatgen.analysis.defects.core import Substitution",
+   "mg_ga = Substitution(structure=gan_struct, site=mg_site)",
+   "from pymatgen.analysis.defects.core import DefectComplex, Substitution, Vacancy"
+  ],
+  "surface": {
+   "properties": [
+    {
+     "name": "centered_defect_structure",
+     "doc": "Get a defect structure that is centered around the site."
+    },
+    {
+     "name": "defect_site",
+     "doc": "Returns the site in the structure that corresponds to the defect site."
+    },
+    {
+     "name": "defect_site_index",
+     "doc": "Get the index of the defect in the structure."
+    },
+    {
+     "name": "defect_structure",
+     "doc": "Returns the defect structure."
+    },
+    {
+     "name": "defect_type",
+     "doc": "Get the defect type."
+    },
+    {
+     "name": "element_changes",
+     "doc": "Get the species changes of the substitution defect."
+    },
+    {
+     "name": "latex_name",
+     "doc": "Get the latex name of the defect."
+    },
+    {
+     "name": "name",
+     "doc": "Name of the defect."
+    },
+    {
+     "name": "symmetrized_structure",
+     "doc": "Get the symmetrized version of the bulk structure."
+    }
+   ],
+   "methods": [
+    {
+     "name": "get_charge_states",
+     "signature": "(padding: 'int' = 1) -> 'list[int]'",
+     "doc": "Potential charge states for a given oxidation state."
+    },
+    {
+     "name": "get_multiplicity",
+     "signature": "() -> 'int'",
+     "doc": "Returns the multiplicity of a defect site within the structure."
+    },
+    {
+     "name": "get_supercell_structure",
+     "signature": "(sc_mat: 'np.ndarray | None' = None, defect_structure: 'Structure | None' = None, dummy_species: 'str | None' = None, min_atoms: 'int' = 80, max_atoms: 'int' = 240, min_length: 'float' = 10.0, force_diagonal: 'bool' = False, relax_radius: 'float | str | None' = None, perturb: 'float | None' = None, target_frac_coords: 'np.ndarray | None' = None, return_site: 'bool' = False) -> 'Structure'",
+     "doc": "Generate the supercell for a defect."
+    }
+   ]
+  },
+  "source": "docstring+tutorial",
+  "related": [
+   "AntiSiteGenerator",
+   "ChargeInsertionAnalyzer",
+   "ChargeInterstitialGenerator",
+   "DefectGenerator",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.generators.SubstitutionGenerator",
+  "short_name": "SubstitutionGenerator",
+  "module": "pymatgen.analysis.defects.generators",
+  "kind": "class",
+  "signature": "(symprec: 'float' = 0.01, angle_tolerance: 'float' = 5) -> 'None'",
+  "description": "Generator of substitutions for symmetry distinct sites in a structure.",
+  "docstring": "Generator of substitutions for symmetry distinct sites in a structure.\n\nAttributes:\n    symprec:  Tolerance for symmetry finding (parameter for ``SpacegroupAnalyzer``).\n    angle_tolerance: Angle tolerance for symmetry finding (parameter for ``SpacegroupAnalyzer``).",
+  "aliases": [
+   "SubstitutionGenerator",
+   "distinct",
+   "generator",
+   "sites",
+   "structure",
+   "substitution generator",
+   "substitutiongenerator",
+   "substitutions"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [],
+   "methods": [
+    {
+     "name": "generate",
+     "signature": "(structure: 'Structure', substitution: 'dict[str, str | list]', **kwargs) -> 'Generator[Substitution, None, None]'",
+     "doc": "Generate subsitutional defects."
+    },
+    {
+     "name": "get_defects",
+     "signature": "(*args, **kwargs) -> 'list[Defect]'",
+     "doc": "Alias for self.generate."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "AntiSiteGenerator",
+   "ChargeInsertionAnalyzer",
+   "ChargeInterstitialGenerator",
+   "DefectGenerator",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.generators.TopographyAnalyzer",
+  "short_name": "TopographyAnalyzer",
+  "module": "pymatgen.analysis.defects.generators",
+  "kind": "class",
+  "signature": "(structure: 'Structure', framework_ions: 'list[str]', cations: 'list[str]', image_tol: 'float' = 0.0001, max_cell_range: 'int' = 1, check_volume: 'bool' = True, constrained_c_frac: 'float' = 0.5, thickness: 'float' = 0.5, clustering_tol: 'float' = 0.5, min_dist: 'float' = 0.9, ltol: 'float' = 0.2, stol: 'float' = 0.3, angle_tol: 'float' = 5) -> 'None'",
+  "description": "Topography Analyzer.",
+  "docstring": "Topography Analyzer.\n\nThis is a generalized module to perform topological analyses of a crystal\nstructure using Voronoi tessellations. It can be used for finding potential\ninterstitial sites. Applications including using these sites for\ninserting additional atoms or for analyzing diffusion pathways.\n\nNote that you typically want to do some preliminary postprocessing after\nthe initial construction. The initial construction will create a lot of\npoints, especially for determining potential insertion sites. Some helper\nmethods are available to perform aggregation and elimination of nodes. A\ntypical use is something like::\n\n    a = TopographyAnalyzer(structure, [\"O\", \"P\"])",
+  "aliases": [
+   "TopographyAnalyzer",
+   "analyzer",
+   "topography",
+   "topography analyzer",
+   "topographyanalyzer"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [
+    {
+     "name": "labeled_sites",
+     "doc": "Get a list of inserted structures and a list of structure matching labels."
+    }
+   ],
+   "methods": [
+    {
+     "name": "check_volume",
+     "signature": "() -> 'None'",
+     "doc": "Basic check for volume of all voronoi poly sum to unit cell volume."
+    },
+    {
+     "name": "get_structure_with_nodes",
+     "signature": "() -> 'Structure'",
+     "doc": "Get the modified structure with the voronoi nodes inserted."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "AntiSiteGenerator",
+   "ChargeInsertionAnalyzer",
+   "ChargeInterstitialGenerator",
+   "DefectGenerator",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.generators.Vacancy",
+  "short_name": "Vacancy",
+  "module": "pymatgen.analysis.defects.generators",
+  "kind": "class",
+  "signature": "(structure: 'Structure', site: 'PeriodicSite', multiplicity: 'int | None' = None, oxi_state: 'float | None' = None, equivalent_sites: 'list[PeriodicSite] | None' = None, symprec: 'float' = 0.01, angle_tolerance: 'float' = 5, user_charges: 'list[int] | None' = None) -> 'None'",
+  "description": "Class representing a vacancy defect.",
+  "docstring": "Class representing a vacancy defect.",
+  "aliases": [
+   "Vacancy",
+   "class",
+   "defect",
+   "representing",
+   "vacancy"
+  ],
+  "examples": [
+   "from pymatgen.analysis.defects.core import DefectComplex, Substitution, Vacancy",
+   "vac_defect0 = Vacancy(structure=bulk, site=mg_site0)",
+   "vac_defect1 = Vacancy(structure=bulk, site=n_site0)"
+  ],
+  "surface": {
+   "properties": [
+    {
+     "name": "centered_defect_structure",
+     "doc": "Get a defect structure that is centered around the site."
+    },
+    {
+     "name": "defect_site",
+     "doc": "Returns the site in the structure that corresponds to the defect site."
+    },
+    {
+     "name": "defect_site_index",
+     "doc": "Get the index of the defect in the structure."
+    },
+    {
+     "name": "defect_structure",
+     "doc": "Returns the defect structure with the proper oxidation state."
+    },
+    {
+     "name": "defect_type",
+     "doc": "Get the defect type."
+    },
+    {
+     "name": "element_changes",
+     "doc": "Get the species changes of the vacancy defect."
+    },
+    {
+     "name": "latex_name",
+     "doc": "Get the latex name of the defect."
+    },
+    {
+     "name": "name",
+     "doc": "Name of the defect."
+    },
+    {
+     "name": "symmetrized_structure",
+     "doc": "Get the symmetrized version of the bulk structure."
+    }
+   ],
+   "methods": [
+    {
+     "name": "get_charge_states",
+     "signature": "(padding: 'int' = 1) -> 'list[int]'",
+     "doc": "Potential charge states for a given oxidation state."
+    },
+    {
+     "name": "get_multiplicity",
+     "signature": "() -> 'int'",
+     "doc": "Returns the multiplicity of a defect site within the structure."
+    },
+    {
+     "name": "get_supercell_structure",
+     "signature": "(sc_mat: 'np.ndarray | None' = None, defect_structure: 'Structure | None' = None, dummy_species: 'str | None' = None, min_atoms: 'int' = 80, max_atoms: 'int' = 240, min_length: 'float' = 10.0, force_diagonal: 'bool' = False, relax_radius: 'float | str | None' = None, perturb: 'float | None' = None, target_frac_coords: 'np.ndarray | None' = None, return_site: 'bool' = False) -> 'Structure'",
+     "doc": "Generate the supercell for a defect."
+    }
+   ]
+  },
+  "source": "docstring+tutorial",
+  "related": [
+   "AntiSiteGenerator",
+   "ChargeInsertionAnalyzer",
+   "ChargeInterstitialGenerator",
+   "DefectGenerator",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.generators.VacancyGenerator",
+  "short_name": "VacancyGenerator",
+  "module": "pymatgen.analysis.defects.generators",
+  "kind": "class",
+  "signature": "(symprec: 'float' = 0.01, angle_tolerance: 'float' = 5) -> 'None'",
+  "description": "Generator for vacancy defects.",
+  "docstring": "Generator for vacancy defects.\n\nAttributes:\n    symprec:  Tolerance for symmetry finding\n        (parameter for ``SpacegroupAnalyzer``).\n    angle_tolerance: Angle tolerance for symmetry finding\n        (parameter for ``SpacegroupAnalyzer``).",
+  "aliases": [
+   "VacancyGenerator",
+   "defects",
+   "generator",
+   "vacancy",
+   "vacancy generator",
+   "vacancygenerator"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [],
+   "methods": [
+    {
+     "name": "generate",
+     "signature": "(structure: 'Structure', rm_species: 'set[str | Species] | list[str | Species] | None' = None, **kwargs) -> 'Generator[Vacancy, None, None]'",
+     "doc": "Generate a vacancy defects."
+    },
+    {
+     "name": "get_defects",
+     "signature": "(*args, **kwargs) -> 'list[Defect]'",
+     "doc": "Alias for self.generate."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "AntiSiteGenerator",
+   "ChargeInsertionAnalyzer",
+   "ChargeInterstitialGenerator",
+   "DefectGenerator",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.generators.VoronoiInterstitialGenerator",
+  "short_name": "VoronoiInterstitialGenerator",
+  "module": "pymatgen.analysis.defects.generators",
+  "kind": "class",
+  "signature": "(clustering_tol: 'float' = 0.5, min_dist: 'float' = 0.9, ltol: 'float' = 0.2, stol: 'float' = 0.3, angle_tol: 'float' = 5, **kwargs) -> 'None'",
+  "description": "Generator for interstitials based on a simple Voronoi.",
+  "docstring": "Generator for interstitials based on a simple Voronoi.\n\nAttributes:\n    clustering_tol: Tolerance for clustering the Voronoi nodes.\n    min_dist: Minimum distance between an interstitial and the nearest atom.\n    ltol: Tolerance for lattice matching.\n    stol: Tolerance for structure matching.\n    angle_tol: Angle tolerance for structure matching.\n    kwargs: Additional keyword arguments for the ``TopographyAnalyzer`` constructor.",
+  "aliases": [
+   "VoronoiInterstitialGenerator",
+   "based",
+   "generator",
+   "interstitials",
+   "simple",
+   "voronoi",
+   "voronoi interstitial generator",
+   "voronoiinterstitialgenerator"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [],
+   "methods": [
+    {
+     "name": "generate",
+     "signature": "(structure: 'Structure | VolumetricData', insert_species: 'set[str] | list[str]', **kwargs) -> 'Generator[Interstitial, None, None]'",
+     "doc": "Generate interstitials."
+    },
+    {
+     "name": "get_defects",
+     "signature": "(*args, **kwargs) -> 'list[Defect]'",
+     "doc": "Alias for self.generate."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "AntiSiteGenerator",
+   "ChargeInsertionAnalyzer",
+   "ChargeInterstitialGenerator",
+   "DefectGenerator",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.generators.generate_all_native_defects",
+  "short_name": "generate_all_native_defects",
+  "module": "pymatgen.analysis.defects.generators",
+  "kind": "function",
+  "signature": "(host: 'Structure | Chgcar', sub_generator: 'SubstitutionGenerator | None' = None, vac_generator: 'VacancyGenerator | None' = None, int_generator: 'ChargeInterstitialGenerator | None' = None, max_insertions: 'int | None' = None) -> 'Generator[Defect, None, None]'",
+  "description": "Generate all native defects.",
+  "docstring": "Generate all native defects.\n\nConvenience function to generate all native defects for a host structure or chgcar object.\n\nArgs:\n    host: The host structure or chgcar object.\n    sub_generator: The substitution generator, if None, a default generator is used.\n    vac_generator: The vacancy generator, if None, a default generator is used.\n    int_generator: The interstitial generator, if None, a default\n        ChargeInterstitialGenerator is used.\n    max_insertions: The maximum number of interstitials to attempt to insert.",
+  "aliases": [
+   "defects",
+   "generate",
+   "generate all native defects",
+   "generate_all_native_defects",
+   "native"
+  ],
+  "examples": [
+   "from pymatgen.analysis.defects.generators import (ChargeInterstitialGenerator, generate_all_native_defects, )",
+   "for defect in generate_all_native_defects(chgcar):"
+  ],
+  "surface": {},
+  "source": "docstring+tutorial",
+  "related": [
+   "AntiSiteGenerator",
+   "ChargeInsertionAnalyzer",
+   "ChargeInterstitialGenerator",
+   "DefectGenerator",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.generators.remove_collisions",
+  "short_name": "remove_collisions",
+  "module": "pymatgen.analysis.defects.generators",
+  "kind": "function",
+  "signature": "(fcoords: 'npt.NDArray', structure: 'Structure', min_dist: 'float' = 0.9) -> 'npt.NDArray'",
+  "description": "Removed points that are too close to existing atoms in the structure.",
+  "docstring": "Removed points that are too close to existing atoms in the structure.\n\nArgs:\n    fcoords (npt.ArrayLike): fractional coordinates of points to remove\n    structure (Structure): The structure in which to check for collisions.\n    min_dist(float): The minimum distance that a vertex needs to be\n        from existing atoms.\n\nReturns:\n    fcoord (numpy.ndarray): The filtered coordinates.",
+  "aliases": [
+   "atoms",
+   "close",
+   "existing",
+   "points",
+   "remove collisions",
+   "remove_collisions",
+   "removed",
+   "structure"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "AntiSiteGenerator",
+   "ChargeInsertionAnalyzer",
+   "ChargeInterstitialGenerator",
+   "DefectGenerator",
+   "Interstitial"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.recombination.boltzmann_filling",
+  "short_name": "boltzmann_filling",
+  "module": "pymatgen.analysis.defects.recombination",
+  "kind": "function",
+  "signature": "(omega_i: 'float', temperature: 'npt.ArrayLike', n_states: 'int' = 30) -> 'npt.NDArray'",
+  "description": "Calculate the Boltzman filling of the phonon states.",
+  "docstring": "Calculate the Boltzman filling of the phonon states.\n\nGet the Boltzmann filling of the lowest ``n_states`` at the given temperature(s).\n\nArgs:\n    omega_i: The phonon frequency in eV.\n    temperature: The temperature in Kelvin.\n    n_states: The number of states to consider.\n\nReturns:\n    The Boltzmann filling factor as a matrix with\n    shape ``(nstates, # temperature steps)``.",
+  "aliases": [
+   "boltzman",
+   "boltzmann filling",
+   "boltzmann_filling",
+   "calculate",
+   "filling",
+   "phonon",
+   "states"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "get_Rad_coef",
+   "get_SRH_coef",
+   "get_mQn",
+   "get_mn",
+   "pchip_eval"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.recombination.get_Rad_coef",
+  "short_name": "get_Rad_coef",
+  "module": "pymatgen.analysis.defects.recombination",
+  "kind": "function",
+  "signature": "(T: 'float | npt.ArrayLike', dQ: 'float', dE: 'float', omega_i: 'float', omega_f: 'float', omega_photon: 'float', dipole_me: 'float', volume: 'float', g: 'int' = 1, occ_tol: 'float' = 0.001) -> 'npt.ArrayLike'",
+  "description": "Compute the Radiative recombination Coefficient.",
+  "docstring": "Compute the Radiative recombination Coefficient.\n\nWe assumed that the transition takes each initial state to some final state.\nWe still use the interpolation method in place of numerical smearing, although\nthat might change if we start to consider broader photon frequencies.\n\nArgs:\n    T: The temperature in Kelvin.\n    dQ: The displacement between the initial and final phonon states. In units of amu^{1/2} Angstrom.\n    dE: The energy difference between the initial and final phonon states. In units of eV.\n    omega_i: The initial phonon frequency in eV.\n    omega_f: The final phonon frequency in eV.\n    omega_photon: The photon frequency in eV.\n    dipole_me: The dipole matrix element in units of eV amu^{-1/2} Angstrom^{-1}\n    volume: The volume of the simulation cell in Angstrom^3.\n    g: The degeneracy factor of the final state.\n    occ_tol : Ni is chosen so that (1 - occ_tol) of the total Bose-Einstein weight is included.\n\nReturns:\n    Resulting capture coefficient (unscaled) in cm^3 s^{-1}",
+  "aliases": [
+   "coefficient",
+   "compute",
+   "get  rad coef",
+   "get rad coef",
+   "get_Rad_coef",
+   "get_rad_coef",
+   "radiative",
+   "recombination"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "boltzmann_filling",
+   "get_SRH_coef",
+   "get_mQn",
+   "get_mn",
+   "pchip_eval"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.recombination.get_SRH_coef",
+  "short_name": "get_SRH_coef",
+  "module": "pymatgen.analysis.defects.recombination",
+  "kind": "function",
+  "signature": "(T: 'float | npt.ArrayLike', dQ: 'float', dE: 'float', omega_i: 'float', omega_f: 'float', elph_me: 'float', volume: 'float', g: 'int' = 1, occ_tol: 'float' = 0.001) -> 'npt.ArrayLike'",
+  "description": "Compute the SRH recombination Coefficient.",
+  "docstring": "Compute the SRH recombination Coefficient.\n\nArgs:\n    T: The temperature in Kelvin.\n    dQ: The displacement between the initial and final phonon states. In units of amu^{1/2} Angstrom.\n    dE: The energy difference between the initial and final phonon states. In units of eV.\n    omega_i: The initial phonon frequency in eV.\n    omega_f: The final phonon frequency in eV.\n    elph_me: The electron-phonon matrix element in units of eV amu^{-1/2} Angstrom^{-1}\n    volume: The volume of the simulation cell in Angstrom^3.\n    g: The degeneracy factor of the final state.\n    occ_tol : Ni is chosen so that (1 - occ_tol) of the total Bose-Einstein occupation is included.\n\nReturns:\n    Resulting capture coefficient (unscaled) in cm^3 s^{-1}",
+  "aliases": [
+   "coefficient",
+   "compute",
+   "get  s r h coef",
+   "get srh coef",
+   "get_SRH_coef",
+   "get_srh_coef",
+   "recombination"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "boltzmann_filling",
+   "get_Rad_coef",
+   "get_mQn",
+   "get_mn",
+   "pchip_eval"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.recombination.get_mQn",
+  "short_name": "get_mQn",
+  "module": "pymatgen.analysis.defects.recombination",
+  "kind": "function",
+  "signature": "(dQ: 'float', omega_i: 'float', omega_f: 'float', m_init: 'int', Nf: 'int', ovl: 'npt.NDArray') -> 'tuple[npt.ArrayLike, npt.ArrayLike]'",
+  "description": "Get the matrix element values for the position operator.",
+  "docstring": "Get the matrix element values for the position operator.\n\n    <m_i|Q|n_f>\n\nArgs:\n    dQ: The displacement between the initial and final phonon states.\n    omega_i: The initial phonon frequency in eV.\n    omega_f: The final phonon frequency in eV.\n    m_init: The initial phonon quantum number.\n    Nf: The number of final phonon states.\n    ovl: The overlap between the initial and final phonon states.\n\nReturns:\n    np.array: The energy different different between energy states.\n        This can be off-set by a constant value depending on the physical process you are studying.\n    np.array: The matrix elements for those pairs of states.",
+  "aliases": [
+   "element",
+   "get m qn",
+   "get mqn",
+   "get_mQn",
+   "get_mqn",
+   "matrix",
+   "operator",
+   "position"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "boltzmann_filling",
+   "get_Rad_coef",
+   "get_SRH_coef",
+   "get_mn",
+   "pchip_eval"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.recombination.get_mn",
+  "short_name": "get_mn",
+  "module": "pymatgen.analysis.defects.recombination",
+  "kind": "function",
+  "signature": "(dQ: 'float', omega_i: 'float', omega_f: 'float', m_init: 'int', en_final: 'float', en_pad: 'float' = 0.5) -> 'tuple[npt.ArrayLike, npt.ArrayLike]'",
+  "description": "Get the matrix element values for the position operator.",
+  "docstring": "Get the matrix element values for the position operator.\n\n    <m_i|n_f>\nStarting in state m_init and ending and ending on final states between\n``en_final - en_pad`` and ``en_final + en_pad`` reference to the bottom of the final state parabola.\n\nArgs:\n    dQ: The displacement between the initial and final phonon states.\n    omega_i: The initial phonon frequency in eV.\n    omega_f: The final phonon frequency in eV.\n    m_init: The initial phonon quantum number.\n    en_final: The final energy in eV, reference to the bottom of the\n        final state parabola.\n    en_pad: The energy window to consider in eV.\n\nReturns:\n    np.array: The energy different different between energy states.\n        This can be off-set by a constant value depending on the physical process you are studying.\n    np.array: The matrix elements for those pairs of states.",
+  "aliases": [
+   "element",
+   "get mn",
+   "get_mn",
+   "matrix",
+   "operator",
+   "position",
+   "values"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "boltzmann_filling",
+   "get_Rad_coef",
+   "get_SRH_coef",
+   "get_mQn",
+   "pchip_eval"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.recombination.pchip_eval",
+  "short_name": "pchip_eval",
+  "module": "pymatgen.analysis.defects.recombination",
+  "kind": "function",
+  "signature": "(x: 'npt.ArrayLike | float', x_coarse: 'npt.ArrayLike', y_coarse: 'npt.ArrayLike', pad_frac: 'float' = 0.2, n_points: 'int' = 5000) -> 'npt.ArrayLike'",
+  "description": "Evaluate a piecewise cubic Hermite interpolant.",
+  "docstring": "Evaluate a piecewise cubic Hermite interpolant.\n\nAssuming a function is evenly sampleded on (``x_coarse``, ``y_coarse``),\nThen we know the final shape of the function has to satisfy match the coarsely sampled data.\nThus, we can just interpolate the function on a finer grid and ensure that the interpolated function\nIntegrates to the same value as the sum of the coarsely sampled data.\n\nArgs:\n    x: The x value/values to evaluate the interpolant at.\n    x_coarse: The x values of the coarsely sampled data.\n    y_coarse: The y values of the coarsely sampled data.\n    pad_frac: The fraction of the domain to pad the interpolation by.\n    n_points: The number of points to evaluate the interpolant at.\n\nReturns:\n    The interpolated values. Note that if ``x`` or any of the elements of ``x`` are outside the domain,\n    then the returned value will be ``np.nan``.",
+  "aliases": [
+   "cubic",
+   "evaluate",
+   "hermite",
+   "interpolant",
+   "pchip eval",
+   "pchip_eval",
+   "piecewise"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "boltzmann_filling",
+   "get_Rad_coef",
+   "get_SRH_coef",
+   "get_mQn",
+   "get_mn"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.supercells.get_closest_sc_mat",
+  "short_name": "get_closest_sc_mat",
+  "module": "pymatgen.analysis.defects.supercells",
+  "kind": "function",
+  "signature": "(uc_struct: 'Structure', sc_struct: 'Structure', sm: 'StructureMatcher | None' = None, debug: 'bool' = False) -> 'NDArray'",
+  "description": "Get the best guess for the supercell matrix that created this defect cell.",
+  "docstring": "Get the best guess for the supercell matrix that created this defect cell.\n\nArgs:\n    uc_struct: unit cell structure, should be the host structure\n    sc_struct: supercell structure, should be the defect structure\n    sm: StructureMatcher instance, if None, one will be created with default settings\n    debug: bool, if True, return the full list of (distances, lattice, sc_mat) will\n        be returned\n\nReturns:\n    sc_mat: supercell matrix to apply to s1 to get s2\n    dist: mean distance between the two structures",
+  "aliases": [
+   "best",
+   "cell",
+   "created",
+   "defect",
+   "get closest sc mat",
+   "get_closest_sc_mat",
+   "guess",
+   "matrix"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "get_matched_structure_mapping",
+   "get_matched_structure_mapping_old",
+   "get_sc_fromstruct"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.supercells.get_matched_structure_mapping",
+  "short_name": "get_matched_structure_mapping",
+  "module": "pymatgen.analysis.defects.supercells",
+  "kind": "function",
+  "signature": "(uc_struct: 'Structure', sc_struct: 'Structure', sm: 'StructureMatcher | None' = None) -> 'tuple[NDArray, ArrayLike] | None'",
+  "description": "Get the mapping of the supercell to the unit cell.",
+  "docstring": "Get the mapping of the supercell to the unit cell.\n\nGet the mapping from the supercell structure onto the base structure,\nNote: this only works for structures that are exactly matched.\n\nArgs:\n    uc_struct: host structure, smaller cell\n    sc_struct: bigger cell\n    sm: StructureMatcher instance\nReturns:\n    sc_m : supercell matrix to apply to s1 to get s2\n    total_t : translation to apply on s1 * sc_m to get s2",
+  "aliases": [
+   "cell",
+   "get matched structure mapping",
+   "get_matched_structure_mapping",
+   "mapping",
+   "supercell",
+   "unit"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "get_closest_sc_mat",
+   "get_matched_structure_mapping_old",
+   "get_sc_fromstruct"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.supercells.get_matched_structure_mapping_old",
+  "short_name": "get_matched_structure_mapping_old",
+  "module": "pymatgen.analysis.defects.supercells",
+  "kind": "function",
+  "signature": "(uc_struct: 'Structure', sc_struct: 'Structure', sm: 'StructureMatcher | None' = None) -> 'tuple[NDArray, ArrayLike] | None'",
+  "description": "Get the mapping of the supercell to the unit cell.",
+  "docstring": "Get the mapping of the supercell to the unit cell.\n\nGet the mapping from the supercell structure onto the base structure,\nNote: this only works for structures that are exactly matched.\n\nArgs:\n    uc_struct: host structure, smaller cell\n    sc_struct: bigger cell\n    sm: StructureMatcher instance\nReturns:\n    sc_m : supercell matrix to apply to s1 to get s2\n    total_t : translation to apply on s1 * sc_m to get s2",
+  "aliases": [
+   "cell",
+   "get matched structure mapping old",
+   "get_matched_structure_mapping_old",
+   "mapping",
+   "supercell",
+   "unit"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "get_closest_sc_mat",
+   "get_matched_structure_mapping",
+   "get_sc_fromstruct"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.supercells.get_sc_fromstruct",
+  "short_name": "get_sc_fromstruct",
+  "module": "pymatgen.analysis.defects.supercells",
+  "kind": "function",
+  "signature": "(base_struct: 'Structure', min_atoms: 'int' = 80, max_atoms: 'int' = 240, min_length: 'float' = 10.0, force_diagonal: 'bool' = False) -> 'NDArray | ArrayLike | None'",
+  "description": "Generate the best supercell from a unitcell.",
+  "docstring": "Generate the best supercell from a unitcell.\n\nThe CubicSupercellTransformation from PMG is much faster but don't iterate over as\nmany supercell configurations so it's less able to find the best configuration in a\ngiven cell size. We try the PMG's cubic supercell transformation first and if it fails\nwe will use the `find_optimal_cell_shape` function from ASE which is much slower but\nexhaustive.\n\nArgs:\n    base_struct: structure of the unit cell\n    max_atoms: Maximum number of atoms allowed in the supercell.\n    min_atoms: Minimum number of atoms allowed in the supercell.\n    min_length: Minimum length of the smallest supercell lattice vector.\n    force_diagonal: If True, return a transformation with a diagonal transformation matrix.\n\nReturns:\n    struc_sc: Supercell that is as close to cubic as possible",
+  "aliases": [
+   "best",
+   "generate",
+   "get sc fromstruct",
+   "get_sc_fromstruct",
+   "supercell",
+   "unitcell"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "get_closest_sc_mat",
+   "get_matched_structure_mapping",
+   "get_matched_structure_mapping_old"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.Defect",
+  "short_name": "Defect",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "class",
+  "signature": "(structure: 'Structure', site: 'PeriodicSite', multiplicity: 'int | None' = None, oxi_state: 'float | None' = None, equivalent_sites: 'list[PeriodicSite] | None' = None, symprec: 'float' = 0.01, angle_tolerance: 'float' = 5, user_charges: 'list[int] | None' = None) -> 'None'",
+  "description": "Abstract class for a single point defect.",
+  "docstring": "Abstract class for a single point defect.",
+  "aliases": [
+   "Defect",
+   "abstract",
+   "class",
+   "defect",
+   "point",
+   "single"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [
+    {
+     "name": "centered_defect_structure",
+     "doc": "Get a defect structure that is centered around the site."
+    },
+    {
+     "name": "defect_structure",
+     "doc": "Get the unit-cell structure representing the defect."
+    },
+    {
+     "name": "defect_type",
+     "doc": "Get the defect type."
+    },
+    {
+     "name": "element_changes",
+     "doc": "Get the species changes of the defect."
+    },
+    {
+     "name": "latex_name",
+     "doc": "Get the latex name of the defect."
+    },
+    {
+     "name": "name",
+     "doc": "Name of the defect."
+    },
+    {
+     "name": "symmetrized_structure",
+     "doc": "Get the symmetrized version of the bulk structure."
+    }
+   ],
+   "methods": [
+    {
+     "name": "get_charge_states",
+     "signature": "(padding: 'int' = 1) -> 'list[int]'",
+     "doc": "Potential charge states for a given oxidation state."
+    },
+    {
+     "name": "get_multiplicity",
+     "signature": "() -> 'int'",
+     "doc": "Get the multiplicity of the defect."
+    },
+    {
+     "name": "get_supercell_structure",
+     "signature": "(sc_mat: 'np.ndarray | None' = None, defect_structure: 'Structure | None' = None, dummy_species: 'str | None' = None, min_atoms: 'int' = 80, max_atoms: 'int' = 240, min_length: 'float' = 10.0, force_diagonal: 'bool' = False, relax_radius: 'float | str | None' = None, perturb: 'float | None' = None, target_frac_coords: 'np.ndarray | None' = None, return_site: 'bool' = False) -> 'Structure'",
+     "doc": "Generate the supercell for a defect."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "DefectEntry",
+   "DefectSiteFinder",
+   "FormationEnergyDiagram",
+   "MultiFormationEnergyDiagram",
+   "NamedDefect"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.DefectEntry",
+  "short_name": "DefectEntry",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "class",
+  "signature": "(defect: 'Defect', charge_state: 'int', sc_entry: 'ComputedStructureEntry', corrections: 'dict[str, float]' = <factory>, corrections_metadata: 'dict[str, Any]' = <factory>, sc_defect_frac_coords: 'tuple[float, float, float] | None' = None, bulk_entry: 'ComputedEntry | None' = None, entry_id: 'str | None' = None) -> None",
+  "description": "Data for completed defect supercell calculation.",
+  "docstring": "Data for completed defect supercell calculation.\n\nAttributes:\n    defect:\n        The defect object used to generate the supercell.\n    charge_state:\n        The charge state of the defect.\n    sc_entry:\n        The ComputedStructureEntry for the supercell.\n    sc_defect_frac_coords:\n        The fractional coordinates of the defect in the supercell.\n        If None, structures attributes of the locpot file will be used to\n        automatically determine the defect location.\n    bulk_entry:\n        The ComputedEntry for the bulk material. If this is provided, the energy difference\n        can be calculated from this automatically. The `bulk_entry` can also be provided as\n        an attribute of the `DefectEntry` object. If both are provided, the one for\n        `FormationEnergyDiagram` has precedence.\n    corrections:\n        A dictionary of corrections to the energy.\n    corrections_metadata:\n        A dictionary that acts as a generic container for storing information\n        about how the corrections were calculated.  These should are only used\n        for debugging and plotting purposes.\n        PLEASE DO NOT USE THIS AS A CONTAINER FOR IMPORTANT DATA.\n    entry_id:\n        The entry_id for the defect entry. Usually the same as the entry_id of the\n        defect supercell entry.",
+  "aliases": [
+   "DefectEntry",
+   "calculation",
+   "completed",
+   "data",
+   "defect",
+   "defect entry",
+   "defectentry",
+   "supercell"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [
+    {
+     "name": "corrected_energy",
+     "doc": "The energy of the defect entry with all corrections applied."
+    },
+    {
+     "name": "defect_chemsys",
+     "doc": "Get the chemical system of the defect."
+    }
+   ],
+   "methods": [
+    {
+     "name": "get_ediff",
+     "signature": "() -> 'float | None'",
+     "doc": "Get the energy difference between the defect and the bulk (including finite-size correctio"
+    },
+    {
+     "name": "get_freysoldt_correction",
+     "signature": "(defect_locpot: 'Locpot | dict', bulk_locpot: 'Locpot | dict', dielectric: 'float | NDArray', defect_struct: 'Structure | None' = None, bulk_struct: 'Structure | None' = None, **kwargs) -> 'CorrectionResult'",
+     "doc": "Calculate the Freysoldt correction."
+    },
+    {
+     "name": "get_summary_dict",
+     "signature": "() -> 'dict'",
+     "doc": "Get a summary dictionary for the defect entry."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "Defect",
+   "DefectSiteFinder",
+   "FormationEnergyDiagram",
+   "MultiFormationEnergyDiagram",
+   "NamedDefect"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.DefectSiteFinder",
+  "short_name": "DefectSiteFinder",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "class",
+  "signature": "(symprec: 'float' = 0.01, angle_tolerance: 'float' = 5.0) -> 'None'",
+  "description": "Find the location of a defect with no pior knowledge.",
+  "docstring": "Find the location of a defect with no pior knowledge.",
+  "aliases": [
+   "DefectSiteFinder",
+   "defect",
+   "defect site finder",
+   "defectsitefinder",
+   "find",
+   "knowledge",
+   "location",
+   "pior"
+  ],
+  "examples": [
+   "from pymatgen.analysis.defects.finder import DefectSiteFinder",
+   "finder = DefectSiteFinder()"
+  ],
+  "surface": {
+   "properties": [],
+   "methods": [
+    {
+     "name": "get_defect_fpos",
+     "signature": "(defect_structure: 'Structure', base_structure: 'Structure', remove_oxi: 'bool' = True) -> 'ArrayLike'",
+     "doc": "Get the position of a defect in the pristine structure."
+    },
+    {
+     "name": "get_impurity_position",
+     "signature": "(defect_structure: 'Structure', base_structure: 'Structure') -> 'ArrayLike'",
+     "doc": "Get the position of an impurity defect."
+    },
+    {
+     "name": "get_most_distorted_sites",
+     "signature": "(defect_structure: 'Structure', base_structure: 'Structure') -> 'list[tuple[int, float]]'",
+     "doc": "Identify the set of sites with the most deviation from the pristine."
+    },
+    {
+     "name": "get_native_defect_position",
+     "signature": "(defect_structure: 'Structure', base_structure: 'Structure') -> 'ArrayLike'",
+     "doc": "Get the position of a native defect in the defect structure."
+    }
+   ]
+  },
+  "source": "docstring+tutorial",
+  "related": [
+   "Defect",
+   "DefectEntry",
+   "FormationEnergyDiagram",
+   "MultiFormationEnergyDiagram",
+   "NamedDefect"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.FormationEnergyDiagram",
+  "short_name": "FormationEnergyDiagram",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "class",
+  "signature": "(defect_entries: 'list[DefectEntry]', pd_entries: 'list[ComputedEntry]', vbm: 'float', band_gap: 'float | None' = None, bulk_entry: 'ComputedStructureEntry | None' = None, inc_inf_values: 'bool' = False, bulk_stability: 'float' = 0.001) -> None",
+  "description": "Formation energy.",
+  "docstring": "Formation energy.\n\nAttributes:\n    defect_entries:\n        The list of defect entries for the different charge states.\n        The finite-size correction should already be applied to these.\n    pd_entries:\n        The list of entries used to construct the phase diagram and chemical\n        potential diagram. They will be used to determine the stability region\n        of the bulk crystal.  The entries are used instead of the ``PhaseDiagram``\n        object to make serializing the object easier.\n    vbm:\n        The VBM of the bulk crystal.\n    band_gap:\n        The band gap of the bulk crystal.\n    bulk_entry:\n        The bulk computed entry to get the total energy of the bulk supercell.\n        This is only used in case where the bulk entry data is not provided by\n        the individual defect entries themselves. Default is None.\n        The data from the `bulk_entry` attached to each `defect_entry` will be\n        preferentially used if it is available.\n    inc_inf_values:\n        If False these boundary points at infinity are ignored when we look at the\n        chemical potential limits.\n        The stability region is sometimes unbounded, example:\n        Mn_Ga in GaN, the chemical potential of Mn is does not affect\n        the stability of GaN so it can go to ``-inf``.\n        A artificial value is needed to help the half-space intersection algorithm.\n        This can be justified since these tend to be the substitutional elements\n        which should not have very negati",
+  "aliases": [
+   "FormationEnergyDiagram",
+   "energy",
+   "formation",
+   "formation energy diagram",
+   "formationenergydiagram"
+  ],
+  "examples": [
+   "from pymatgen.analysis.defects.thermo import FormationEnergyDiagram"
+  ],
+  "surface": {
+   "properties": [
+    {
+     "name": "bulk_formula",
+     "doc": "Get the bulk formula."
+    },
+    {
+     "name": "chempot_limits",
+     "doc": "Return the chemical potential limits in dictionary format."
+    },
+    {
+     "name": "competing_phases",
+     "doc": "Return the competing phases."
+    },
+    {
+     "name": "defect",
+     "doc": "Get the defect that this FormationEnergyDiagram represents."
+    },
+    {
+     "name": "defect_chemsys",
+     "doc": "Get the chemical system of the defect."
+    }
+   ],
+   "methods": [
+    {
+     "name": "as_dataframe",
+     "signature": "() -> 'DataFrame'",
+     "doc": "Return the formation energy diagram as a pandas dataframe."
+    },
+    {
+     "name": "get_chempots",
+     "signature": "(rich_element: 'Element | str', en_tol: 'float' = 0.01) -> 'dict'",
+     "doc": "Get the chemical potential for a desired growth condition."
+    },
+    {
+     "name": "get_concentration",
+     "signature": "(fermi_level: 'float', chempots: 'dict', temperature: 'float') -> 'float'",
+     "doc": "Get equilibrium defect concentration assuming the dilute limit."
+    },
+    {
+     "name": "get_formation_energy",
+     "signature": "(fermi_level: 'float', chempot_dict: 'dict') -> 'float'",
+     "doc": "Get the formation energy at a given Fermi level."
+    },
+    {
+     "name": "get_transitions",
+     "signature": "(chempots: 'dict', x_min: 'float' = 0, x_max: 'float | None' = None) -> 'list[tuple[float, float]]'",
+     "doc": "Get the transition levels for the formation energy diagram."
+    }
+   ]
+  },
+  "source": "docstring+tutorial",
+  "related": [
+   "Defect",
+   "DefectEntry",
+   "DefectSiteFinder",
+   "MultiFormationEnergyDiagram",
+   "NamedDefect"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.MultiFormationEnergyDiagram",
+  "short_name": "MultiFormationEnergyDiagram",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "class",
+  "signature": "(formation_energy_diagrams: 'list[FormationEnergyDiagram]') -> None",
+  "description": "Container for multiple formation energy diagrams.",
+  "docstring": "Container for multiple formation energy diagrams.",
+  "aliases": [
+   "MultiFormationEnergyDiagram",
+   "container",
+   "diagrams",
+   "energy",
+   "formation",
+   "multi formation energy diagram",
+   "multiformationenergydiagram",
+   "multiple"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [],
+   "methods": [
+    {
+     "name": "solve_for_fermi_level",
+     "signature": "(chempots: 'dict', temperature: 'float', dos: 'Dos') -> 'float'",
+     "doc": "Solves for the equilibrium fermi level at a given chempot, temperature, density of states."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "Defect",
+   "DefectEntry",
+   "DefectSiteFinder",
+   "FormationEnergyDiagram",
+   "NamedDefect"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.NamedDefect",
+  "short_name": "NamedDefect",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "class",
+  "signature": "(name: 'str', bulk_formula: 'str', element_changes: 'dict') -> 'None'",
+  "description": "Class for defect definition without the UC structure.",
+  "docstring": "Class for defect definition without the UC structure.\n\nThe defect is defined only by its name. For complexes the name\nshould be created with \"+\" between the individual defects.\n\n.. note::\n    This class is only used to help aggregate defects calculated\n    outside of our framework so a ``Defect`` object is missing.\n    The object will not have any mechanism for generating supercells\n    or guessing oxidation states.  It is simply a placeholder to help\n    with the grouping logic of the Formation Energy diagram analysis.",
+  "aliases": [
+   "NamedDefect",
+   "class",
+   "defect",
+   "definition",
+   "named defect",
+   "nameddefect",
+   "structure",
+   "without"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [
+    {
+     "name": "latex_name",
+     "doc": "Get the latex name of the defect."
+    }
+   ],
+   "methods": []
+  },
+  "source": "docstring",
+  "related": [
+   "Defect",
+   "DefectEntry",
+   "DefectSiteFinder",
+   "FormationEnergyDiagram",
+   "MultiFormationEnergyDiagram"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.ensure_stable_bulk",
+  "short_name": "ensure_stable_bulk",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "function",
+  "signature": "(pd: 'PhaseDiagram', entry: 'ComputedEntry', threshold: 'float' = 0.001) -> 'PhaseDiagram'",
+  "description": "Added entry to phase diagram and ensure that it is stable.",
+  "docstring": "Added entry to phase diagram and ensure that it is stable.\n\nCreate a fake entry in the phase diagram with the same id as the supplied ``entry``\nbut with energy just below the convex hull and return the updated phase diagram.\n\nNote: This is done regardless of whether the entry is stable or not,\nso we are effectively only using the energy from the phase diagram and ignoring\nthe energy of supplied entry.\n\nArgs:\n    pd:\n        Phase diagram.\n    entry:\n        entry to be added\n    threshold:\n        If the bulk energy is above the convex hull, lower it to this value below\n        the convex hull.\n\nReturns:\n    PhaseDiagram:\n        Modified Phase diagram.",
+  "aliases": [
+   "added",
+   "diagram",
+   "ensure",
+   "ensure stable bulk",
+   "ensure_stable_bulk",
+   "entry",
+   "phase",
+   "stable"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Defect",
+   "DefectEntry",
+   "DefectSiteFinder",
+   "FormationEnergyDiagram",
+   "MultiFormationEnergyDiagram"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.fermi_dirac",
+  "short_name": "fermi_dirac",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "function",
+  "signature": "(energy: 'float', temperature: 'float') -> 'float'",
+  "description": "Get value of fermi dirac distribution.",
+  "docstring": "Get value of fermi dirac distribution.\n\nGets the defects equilibrium concentration (up to the multiplicity factor)\nat a particular fermi level, chemical potential, and temperature (in Kelvin),\nassuming dilute limit thermodynamics (non-interacting defects) using FD statistics.\n\nArgs:\n    energy: Energy of the defect with respect to the VBM.\n    temperature: Temperature in Kelvin.",
+  "aliases": [
+   "dirac",
+   "distribution",
+   "fermi",
+   "fermi dirac",
+   "fermi_dirac",
+   "value"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Defect",
+   "DefectEntry",
+   "DefectSiteFinder",
+   "FormationEnergyDiagram",
+   "MultiFormationEnergyDiagram"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.get_closest_sc_mat",
+  "short_name": "get_closest_sc_mat",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "function",
+  "signature": "(uc_struct: 'Structure', sc_struct: 'Structure', sm: 'StructureMatcher | None' = None, debug: 'bool' = False) -> 'NDArray'",
+  "description": "Get the best guess for the supercell matrix that created this defect cell.",
+  "docstring": "Get the best guess for the supercell matrix that created this defect cell.\n\nArgs:\n    uc_struct: unit cell structure, should be the host structure\n    sc_struct: supercell structure, should be the defect structure\n    sm: StructureMatcher instance, if None, one will be created with default settings\n    debug: bool, if True, return the full list of (distances, lattice, sc_mat) will\n        be returned\n\nReturns:\n    sc_mat: supercell matrix to apply to s1 to get s2\n    dist: mean distance between the two structures",
+  "aliases": [
+   "best",
+   "cell",
+   "created",
+   "defect",
+   "get closest sc mat",
+   "get_closest_sc_mat",
+   "guess",
+   "matrix"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Defect",
+   "DefectEntry",
+   "DefectSiteFinder",
+   "FormationEnergyDiagram",
+   "MultiFormationEnergyDiagram"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.get_freysoldt_correction",
+  "short_name": "get_freysoldt_correction",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "function",
+  "signature": "(q: 'int', dielectric: 'float', defect_locpot: 'Locpot', bulk_locpot: 'Locpot', defect_frac_coords: 'ArrayLike | None' = None, lattice: 'Lattice | None' = None, energy_cutoff: 'float' = 520, mad_tol: 'float' = 0.0001, q_model: 'QModel | None' = None, step: 'float' = 0.0001) -> 'CorrectionResult'",
+  "description": "Gets the Freysoldt correction for a defect entry.",
+  "docstring": "Gets the Freysoldt correction for a defect entry.\n\nArgs:\n    q:\n        Charge state of defect\n    dielectric:\n        Dielectric constant of bulk\n    defect_locpot:\n        Locpot of defect\n    bulk_locpot:\n        Locpot of bulk\n    defect_frac_coords:\n        Fractional coordinates of the defect.\n    lattice:\n        Lattice of the defect supercell. If None, then uses the lattice of the\n        defect_locpot.\n    energy_cutoff:\n        Maximum energy in eV in reciprocal space to perform integration\n    mad_tol:\n        Convergence criteria for the Madelung energy for potential correction\n    q_model:\n        QModel object to use for Freysoldt correction. If None, then uses default\n    step:\n        Step size for numerical integration.\n\nReturns:\n    CorrectionResult: Correction summary object. The metadata contains\n        plotting data for the planar average electrostatic potential.\n        ```\n        plot_plnr_avg(result.metadata[0], title=\"Lattice Direction 1\")\n        ```",
+  "aliases": [
+   "correction",
+   "defect",
+   "entry",
+   "freysoldt",
+   "get freysoldt correction",
+   "get_freysoldt_correction",
+   "gets"
+  ],
+  "examples": [
+   "from pymatgen.analysis.defects.corrections.freysoldt import (Locpot, get_freysoldt_correction, plot_plnr_avg, )",
+   "freysoldt_results[q] = get_freysoldt_correction(q=q, dielectric=5, bulk_locpot=bulk_locpot, defect_locpot=defect_locpot, defect_frac_coords=center, )"
+  ],
+  "surface": {},
+  "source": "docstring+tutorial",
+  "related": [
+   "Defect",
+   "DefectEntry",
+   "DefectSiteFinder",
+   "FormationEnergyDiagram",
+   "MultiFormationEnergyDiagram"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.get_lower_envelope",
+  "short_name": "get_lower_envelope",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "function",
+  "signature": "(lines: 'list[tuple[float, float]]') -> 'list[tuple[float, float]]'",
+  "description": "Get the lower envelope of the formation energy.",
+  "docstring": "Get the lower envelope of the formation energy.\n\nBased on the fact that the lower envelope of the lines is\ngiven by the upper convex hull of the points (m, -b) as shown in:\nhttps://www.cs.umd.edu/class/spring2020/cmsc754/Lects/lect06-duality.pdf\nNote: The lines are returned with decreasing slope.\n\nArgs:\n    lines: (m, b) format for each line\n\nReturns:\n    List[List[float]]:\n        List lines that make up the lower envelope.",
+  "aliases": [
+   "energy",
+   "envelope",
+   "formation",
+   "get lower envelope",
+   "get_lower_envelope",
+   "lower"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Defect",
+   "DefectEntry",
+   "DefectSiteFinder",
+   "FormationEnergyDiagram",
+   "MultiFormationEnergyDiagram"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.get_sc_locpot",
+  "short_name": "get_sc_locpot",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "function",
+  "signature": "(uc_locpot: 'Locpot', defect_struct: 'Structure', grid_out: 'tuple', up_sample: 'int' = 2, sm: 'StructureMatcher' = None) -> 'Locpot'",
+  "description": "Transform a unit cell locpot to be like a supercell locpot.",
+  "docstring": "Transform a unit cell locpot to be like a supercell locpot.\n\nThis is useful in situations where the supercell bulk locpot is not available.\nIn these cases, we will have a bulk supercell structure that is most closely\nrelated to the defect cell.\n\nArgs:\n    uc_locpot: Locpot object for the unit cell.\n    defect_struct: Defect structure to use for the transformation.\n    grid_out: grid dimensions for the supercell locpot\n    up_sample: upsample factor for the supercell locpot\n    sm: StructureMatcher to use for finding the transformation for UC to SC.\n\nReturns:\n    Locpot: Locpot object for the unit cell transformed to be like the supercell.",
+  "aliases": [
+   "cell",
+   "get sc locpot",
+   "get_sc_locpot",
+   "like",
+   "locpot",
+   "supercell",
+   "transform",
+   "unit"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Defect",
+   "DefectEntry",
+   "DefectSiteFinder",
+   "FormationEnergyDiagram",
+   "MultiFormationEnergyDiagram"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.get_transitions",
+  "short_name": "get_transitions",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "function",
+  "signature": "(lines: 'list[tuple[float, float]]', x_min: 'float', x_max: 'float') -> 'list[tuple[float, float]]'",
+  "description": "Get the \"transition\" points in a list of lines.",
+  "docstring": "Get the \"transition\" points in a list of lines.\n\nGiven a list of lines represented as (m, b) pairs sorted in order of decreasing m.\nA \"transition\" point is a point where adjacent lines in the list intersect.\ni.e. intersection points (x_i, y_i) where line i intersects line i+1\n\nArgs:\n    lines: (m, b) format for each line\n    x_min: minimum x value\n    x_max: maximum x value\n\nReturns:\n    List[List[float]]:\n        List of intersection points, including the boundary points at\n        x_min and x_max.",
+  "aliases": [
+   "get transitions",
+   "get_transitions",
+   "lines",
+   "list",
+   "points",
+   "transition"
+  ],
+  "examples": [
+   "ts = np.array(fed.get_transitions(fed.chempot_limits[1], x_max=5))"
+  ],
+  "surface": {},
+  "source": "docstring+tutorial",
+  "related": [
+   "Defect",
+   "DefectEntry",
+   "DefectSiteFinder",
+   "FormationEnergyDiagram",
+   "MultiFormationEnergyDiagram"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.get_upper_hull",
+  "short_name": "get_upper_hull",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "function",
+  "signature": "(points: 'ArrayLike') -> 'list[ArrayLike]'",
+  "description": "Get the upper hull of a set of points in 2D.",
+  "docstring": "Get the upper hull of a set of points in 2D.\n\nArgs:\n    points:\n        List of points in 2D.\n\nReturns:\n    List[(float, float)]:\n        Vertices in the upper hull given from right to left.",
+  "aliases": [
+   "get upper hull",
+   "get_upper_hull",
+   "hull",
+   "points",
+   "upper"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Defect",
+   "DefectEntry",
+   "DefectSiteFinder",
+   "FormationEnergyDiagram",
+   "MultiFormationEnergyDiagram"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.get_zfile",
+  "short_name": "get_zfile",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "function",
+  "signature": "(directory: 'Path', base_name: 'str', allow_missing: 'bool' = False) -> 'Path | None'",
+  "description": "Find gzipped or non-gzipped versions of a file in a directory listing.",
+  "docstring": "Find gzipped or non-gzipped versions of a file in a directory listing.\n\nArgs:\n    directory : A list of files in a directory.\n    base_name : The base name of file file to find.\n    allow_missing : Whether to error if no version of the file (gzipped or un-gzipped) can be found.\n\nReturns:\n    Path | None: A path to the matched file. If ``allow_missing=True``\n    and the file cannot be found, then ``None`` will be returned.",
+  "aliases": [
+   "directory",
+   "file",
+   "find",
+   "get zfile",
+   "get_zfile",
+   "gzipped",
+   "listing",
+   "versions"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Defect",
+   "DefectEntry",
+   "DefectSiteFinder",
+   "FormationEnergyDiagram",
+   "MultiFormationEnergyDiagram"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.group_defect_entries",
+  "short_name": "group_defect_entries",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "function",
+  "signature": "(defect_entries: 'list[DefectEntry]', sm: 'StructureMatcher' = None) -> 'Generator[tuple[str, list[DefectEntry]], None, None]'",
+  "description": "Group defect entries by their representation.",
+  "docstring": "Group defect entries by their representation.\n\nFirst by name then by structure.\n\nArgs:\n    defect_entries: list of defect entries\n    sm: StructureMatcher to use for grouping\n\nReturns:\n    Generator of (name, list of defect entries) tuples",
+  "aliases": [
+   "defect",
+   "entries",
+   "group",
+   "group defect entries",
+   "group_defect_entries",
+   "representation",
+   "their"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Defect",
+   "DefectEntry",
+   "DefectSiteFinder",
+   "FormationEnergyDiagram",
+   "MultiFormationEnergyDiagram"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.group_docs",
+  "short_name": "group_docs",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "function",
+  "signature": "(docs: 'Sequence', sm: 'StructureMatcher', get_structure: 'Callable', get_hash: 'Callable | None' = None) -> 'Generator[tuple[str | None, list], None, None]'",
+  "description": "Group docs by a simple hash followed by structure.",
+  "docstring": "Group docs by a simple hash followed by structure.\n\nAssuming that you have a basic representation of the defect, like `name`.\nWill first group the documents by name, then group them by the structure\nof their representation.\n\nArgs:\n    docs (list): list of generic documents/objects\n    sm (StructureMatcher): StructureMatcher object\n    get_hash (function): function to get the hash from the document,\n        this should be some kind of simple string representation.\n    get_structure (function): function to get the structure from the document\n\nReturns:\n    Generator of (name, group)",
+  "aliases": [
+   "docs",
+   "followed",
+   "group",
+   "group docs",
+   "group_docs",
+   "hash",
+   "simple",
+   "structure"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Defect",
+   "DefectEntry",
+   "DefectSiteFinder",
+   "FormationEnergyDiagram",
+   "MultiFormationEnergyDiagram"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.group_formation_energy_diagrams",
+  "short_name": "group_formation_energy_diagrams",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "function",
+  "signature": "(feds: 'Sequence[FormationEnergyDiagram]', sm: 'StructureMatcher' = None) -> 'Generator[tuple[str | None, FormationEnergyDiagram], None, None]'",
+  "description": "Group formation energy diagrams by their representation.",
+  "docstring": "Group formation energy diagrams by their representation.\n\nFirst by name then by structure.  Note, this function assumes that the defects\nare for the same host structure.\n\nArgs:\n    feds: list of formation energy diagrams\n    sm: StructureMatcher to use for grouping\n\nReturns:\n    Generator of (name, combined formation energy diagram) tuples.",
+  "aliases": [
+   "diagrams",
+   "energy",
+   "formation",
+   "group",
+   "group formation energy diagrams",
+   "group_formation_energy_diagrams",
+   "representation",
+   "their"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Defect",
+   "DefectEntry",
+   "DefectSiteFinder",
+   "FormationEnergyDiagram",
+   "MultiFormationEnergyDiagram"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.thermo.plot_formation_energy_diagrams",
+  "short_name": "plot_formation_energy_diagrams",
+  "module": "pymatgen.analysis.defects.thermo",
+  "kind": "function",
+  "signature": "(formation_energy_diagrams: 'FormationEnergyDiagram | list[FormationEnergyDiagram] | MultiFormationEnergyDiagram', rich_element: 'Element | None' = None, chempots: 'dict | None' = None, alignment: 'float' = 0.0, xlim: 'list | None' = None, ylim: 'list | None' = None, only_lower_envelope: 'bool' = True, show: 'bool' = True, save: 'bool | str' = False, colors: 'list | None' = None, legend_prefix: 'str | None' = None, transition_marker: 'str' = '*', transition_markersize: 'int' = 16, linestyle: 'str' = '-', linewidth: 'int' = 4, envelope_alpha: 'float' = 0.8, line_alpha: 'float' = 0.5, band_edge_color: 'str' = 'k', filterfunction: 'Callable | None' = None, legend_loc: 'str' = 'lower center', show_legend: 'bool' = True, axis: 'Axes' = None) -> 'Axes'",
+  "description": "Plot the formation energy diagram.",
+  "docstring": "Plot the formation energy diagram.\n\nArgs:\n    formation_energy_diagrams: Which formation energy lines to plot.\n    rich_element: The abundant element used to set the limit of the chemical potential.\n    chempots: Chemical potentials at which to plot the formation energy lines\n        Should be bounded by the chempot_limits property\n    alignment: shift the energy axis by this amount. For example, giving bandgap/2\n        will visually shift the 0 reference from the VBM to the middle of the band gap.\n    xlim: Limits (low, high) to use for the x-axis. Default is to use 0eV for the\n        VBM up to the band gap, plus a buffer of 0.2eV on each side\n    ylim: Limits (low, high) to use for y-axis. Default is to use the minimum and\n        maximum formation energy value of all defects, plus a buffer of 0.1eV\n    only_lower_envelope: Whether to only plot the lower envolope (concave hull). If\n        False, then the lower envolope will be highlighted, but all lines will be\n        plotted.\n    show: Whether to show the plot.\n    save: Whether to save the plot. A string can be provided to save to a specific\n        file. If True, will be saved to current working directory under the name,\n        formation_energy_diagram.png\n    colors: Manually select the colors to use. Must have length >= to number of\n        FormationEnergyDiagrams to plot.\n    legend_prefix: Prefix for all legend labels\n    transition_marker: Marker style for the charge transitions\n    transition_markersize: Size ",
+  "aliases": [
+   "diagram",
+   "energy",
+   "formation",
+   "plot",
+   "plot formation energy diagrams",
+   "plot_formation_energy_diagrams"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "Defect",
+   "DefectEntry",
+   "DefectSiteFinder",
+   "FormationEnergyDiagram",
+   "MultiFormationEnergyDiagram"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.ChargeInsertionAnalyzer",
+  "short_name": "ChargeInsertionAnalyzer",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "class",
+  "signature": "(chgcar: 'VolumetricData', working_ion: 'str' = 'Li', clustering_tol: 'float' = 0.5, ltol: 'float' = 0.2, stol: 'float' = 0.3, angle_tol: 'float' = 5, min_dist: 'float' = 0.9) -> 'None'",
+  "description": "Object for insertions sites from charge density.",
+  "docstring": "Object for insertions sites from charge density.\n\nAnalyze the charge density and create new candidate structures by inserting at each charge minima\nThe similar inserterd structures are given the same uniqueness label.\n\n.. note::\n    The charge density analysis works best with AECCAR data since CHGCAR data\n    often contains spurious local minima in the core. However you can still use CHGCAR\n    with an appropriate ``max_avg_charge`` value.\n\n    Since the user might want to rerun their analysis with different ``avg_charge`` and\n    ``max_avg_charge`` values, we will generate and store all the ion-inserted structure\n    and their uniqueness labels first and allow the user to get the filtered and labeled results.\n\n    If you use this code please cite the following paper:\n    J.-X. Shen et al.: npj Comput. Mater. 6, 1 (2020)\n    https://www.nature.com/articles/s41524-020-00422-3\n\nAttributes:\n    chgcar: The charge density object to analyze\n    working_ion: The working ion to be inserted\n    clustering_tol: Distance tolerance for grouping sites together\n    ltol: StructureMatcher ltol parameter\n    stol: StructureMatcher stol parameter\n    angle_tol: StructureMatcher angle_tol parameter\n    min_dist: Minimum distance between sites and the host atoms in \u00c5.",
+  "aliases": [
+   "ChargeInsertionAnalyzer",
+   "charge",
+   "charge insertion analyzer",
+   "chargeinsertionanalyzer",
+   "density",
+   "insertions",
+   "object",
+   "sites"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [],
+   "methods": [
+    {
+     "name": "filter_and_group",
+     "signature": "(avg_radius: 'float' = 0.4, max_avg_charge: 'float' = 1.0) -> 'list[tuple[float, list[list[float]]]]'",
+     "doc": "Filter and group the insertion sites by average charge."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron",
+   "calculate_vol"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.CorrectionResult",
+  "short_name": "CorrectionResult",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "class",
+  "signature": "(correction_energy: 'float', metadata: 'dict[Any, Any]') -> None",
+  "description": "A summary of the corrections applied to a structure.",
+  "docstring": "A summary of the corrections applied to a structure.\n\nAttributes:\n    electrostatic: The electrostatic correction.\n    potential_alignment: The potential alignment correction.\n    metadata: A dictionary of metadata for plotting and intermediate analysis.",
+  "aliases": [
+   "CorrectionResult",
+   "applied",
+   "correction result",
+   "correctionresult",
+   "corrections",
+   "structure",
+   "summary"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [],
+   "methods": []
+  },
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron",
+   "calculate_vol"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.QModel",
+  "short_name": "QModel",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "class",
+  "signature": "(beta: 'float' = 1.0, expnorm: 'float' = 0.0, gamma: 'float' = 1.0) -> 'None'",
+  "description": "Model for the defect charge distribution.",
+  "docstring": "Model for the defect charge distribution.\n\nA combination of exponential tail and gaussian distribution is used\n(see Freysoldt (2011), DOI: 10.1002/pssb.201046289 )\n\nq_model(r) = q [x exp(-r/gamma) + (1-x) exp(-r^2/beta^2)]\nwithout normalization constants\n\nBy default, gaussian distribution with 1 Bohr width is assumed.\nIf defect charge is more delocalized, exponential tail is suggested.",
+  "aliases": [
+   "QModel",
+   "charge",
+   "defect",
+   "distribution",
+   "model",
+   "q model",
+   "qmodel"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [
+    {
+     "name": "rho_rec_limit0",
+     "doc": "Reciprocal space model charge value."
+    }
+   ],
+   "methods": [
+    {
+     "name": "rho_rec",
+     "signature": "(g2: 'float') -> 'float'",
+     "doc": "Reciprocal space model charge value."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron",
+   "calculate_vol"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.TopographyAnalyzer",
+  "short_name": "TopographyAnalyzer",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "class",
+  "signature": "(structure: 'Structure', framework_ions: 'list[str]', cations: 'list[str]', image_tol: 'float' = 0.0001, max_cell_range: 'int' = 1, check_volume: 'bool' = True, constrained_c_frac: 'float' = 0.5, thickness: 'float' = 0.5, clustering_tol: 'float' = 0.5, min_dist: 'float' = 0.9, ltol: 'float' = 0.2, stol: 'float' = 0.3, angle_tol: 'float' = 5) -> 'None'",
+  "description": "Topography Analyzer.",
+  "docstring": "Topography Analyzer.\n\nThis is a generalized module to perform topological analyses of a crystal\nstructure using Voronoi tessellations. It can be used for finding potential\ninterstitial sites. Applications including using these sites for\ninserting additional atoms or for analyzing diffusion pathways.\n\nNote that you typically want to do some preliminary postprocessing after\nthe initial construction. The initial construction will create a lot of\npoints, especially for determining potential insertion sites. Some helper\nmethods are available to perform aggregation and elimination of nodes. A\ntypical use is something like::\n\n    a = TopographyAnalyzer(structure, [\"O\", \"P\"])",
+  "aliases": [
+   "TopographyAnalyzer",
+   "analyzer",
+   "topography",
+   "topography analyzer",
+   "topographyanalyzer"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [
+    {
+     "name": "labeled_sites",
+     "doc": "Get a list of inserted structures and a list of structure matching labels."
+    }
+   ],
+   "methods": [
+    {
+     "name": "check_volume",
+     "signature": "() -> 'None'",
+     "doc": "Basic check for volume of all voronoi poly sum to unit cell volume."
+    },
+    {
+     "name": "get_structure_with_nodes",
+     "signature": "() -> 'Structure'",
+     "doc": "Get the modified structure with the voronoi nodes inserted."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "VoronoiPolyhedron",
+   "calculate_vol"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.VoronoiPolyhedron",
+  "short_name": "VoronoiPolyhedron",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "class",
+  "signature": "(lattice: 'Lattice', frac_coords: 'npt.ArrayLike', polyhedron_indices: 'list | set', all_coords: 'list', name: 'str | int | None' = None) -> 'None'",
+  "description": "Convenience container for a voronoi point in PBC and its associated polyhedron.",
+  "docstring": "Convenience container for a voronoi point in PBC and its associated polyhedron.",
+  "aliases": [
+   "VoronoiPolyhedron",
+   "associated",
+   "container",
+   "convenience",
+   "point",
+   "polyhedron",
+   "voronoi",
+   "voronoi polyhedron"
+  ],
+  "examples": [],
+  "surface": {
+   "properties": [
+    {
+     "name": "coordination",
+     "doc": "Coordination number."
+    },
+    {
+     "name": "volume",
+     "doc": "Volume of the polyhedron."
+    }
+   ],
+   "methods": [
+    {
+     "name": "is_image",
+     "signature": "(poly: 'VoronoiPolyhedron', tol: 'float') -> 'bool'",
+     "doc": "Check if poly is an image of the current polyhedron."
+    }
+   ]
+  },
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "calculate_vol"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.calculate_vol",
+  "short_name": "calculate_vol",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "(coords: 'npt.NDArray') -> 'float'",
+  "description": "Calculate volume given a set of points in 3D space.",
+  "docstring": "Calculate volume given a set of points in 3D space.\n\nArgs:\n    coords: The coordinates of the points in 3D space.\n\nReturns:\n    The volume of the convex hull of the points.",
+  "aliases": [
+   "calculate",
+   "calculate vol",
+   "calculate_vol",
+   "points",
+   "space",
+   "volume"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.cluster_nodes",
+  "short_name": "cluster_nodes",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "(fcoords: 'npt.ArrayLike', lattice: 'Lattice', tol: 'float' = 0.2) -> 'npt.NDArray'",
+  "description": "Cluster nodes that are too close together using hiercharcal clustering.",
+  "docstring": "Cluster nodes that are too close together using hiercharcal clustering.\n\nArgs:\n    fcoords (npt.ArrayLike): fractional coordinates of points to cluster.\n    lattice (Lattice): The lattice of the structure.\n    tol (float): A distance tolerance. PBC is taken into account.",
+  "aliases": [
+   "close",
+   "cluster",
+   "cluster nodes",
+   "cluster_nodes",
+   "clustering",
+   "hiercharcal",
+   "nodes",
+   "together"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.converge",
+  "short_name": "converge",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "(f: 'Callable', step: 'float', tol: 'float', max_h: 'float') -> 'float'",
+  "description": "Simple newton iteration based convergence function.",
+  "docstring": "Simple newton iteration based convergence function.\n\nArgs:\n    f: function to converge\n    step: step size for newton iteration\n    tol: tolerance for convergence\n    max_h: maximum value of h to try before giving up\n\nReturns:\n    converged value of f",
+  "aliases": [
+   "based",
+   "converge",
+   "convergence",
+   "function",
+   "iteration",
+   "newton",
+   "simple"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.eV_to_k",
+  "short_name": "eV_to_k",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "(energy: 'float') -> 'float'",
+  "description": "Convert energy to reciprocal vector magnitude k via hbar*k^2/2m.",
+  "docstring": "Convert energy to reciprocal vector magnitude k via hbar*k^2/2m.\n\nArgs:\n    energy: Energy in eV.\n\nReturns:\n    (double) Reciprocal vector magnitude (units of 1/Bohr).",
+  "aliases": [
+   "convert",
+   "e v to k",
+   "eV_to_k",
+   "energy",
+   "ev to k",
+   "ev_to_k",
+   "hbar",
+   "magnitude"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.generate_reciprocal_vectors_squared",
+  "short_name": "generate_reciprocal_vectors_squared",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "(a1: 'npt.ArrayLike', a2: 'npt.ArrayLike', a3: 'npt.ArrayLike', encut: 'float') -> 'Generator[float, None, None]'",
+  "description": "Generate Reciprocal vectors squared.",
+  "docstring": "Generate Reciprocal vectors squared.\n\nGenerate reciprocal vector magnitudes within the cutoff along the specified\nlattice vectors.\n\nArgs:\n    a1: Lattice vector a (in Bohrs)\n    a2: Lattice vector b (in Bohrs)\n    a3: Lattice vector c (in Bohrs)\n    encut: Reciprocal vector energy cutoff\n\nReturns:\n    [[g1^2], [g2^2], ...] Square of reciprocal vectors (1/Bohr)^2\n    determined by a1, a2, a3 and whose magntidue is less than gcut^2.",
+  "aliases": [
+   "generate",
+   "generate reciprocal vectors squared",
+   "generate_reciprocal_vectors_squared",
+   "reciprocal",
+   "squared",
+   "vectors"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.generic_group_labels",
+  "short_name": "generic_group_labels",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "(list_in: 'Sequence', comp: 'Callable' = <built-in function eq>) -> 'list[int]'",
+  "description": "Group a list of unsortable objects.",
+  "docstring": "Group a list of unsortable objects.\n\nArgs:\n    list_in: A list of generic objects\n    comp: (Default value = operator.eq) The comparator\n\nReturns:\n    list[int]: list of labels for the input list",
+  "aliases": [
+   "generic group labels",
+   "generic_group_labels",
+   "group",
+   "list",
+   "objects",
+   "unsortable"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.genrecip",
+  "short_name": "genrecip",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "(a1: 'npt.ArrayLike', a2: 'npt.ArrayLike', a3: 'npt.ArrayLike', encut: 'float') -> 'Generator[npt.ArrayLike, None, None]'",
+  "description": "Generate reciprocal lattice vectors within the energy cutoff.",
+  "docstring": "Generate reciprocal lattice vectors within the energy cutoff.\n\nArgs:\n    a1: Lattice vector a (in Bohrs)\n    a2: Lattice vector b (in Bohrs)\n    a3: Lattice vector c (in Bohrs)\n    encut: energy cut off in eV\n\nReturns:\n    reciprocal lattice vectors with energy less than encut",
+  "aliases": [
+   "cutoff",
+   "energy",
+   "generate",
+   "genrecip",
+   "lattice",
+   "reciprocal",
+   "vectors",
+   "within"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.get_avg_chg",
+  "short_name": "get_avg_chg",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "(chgcar: 'VolumetricData', fcoord: 'npt.ArrayLike', radius: 'float' = 0.4) -> 'float'",
+  "description": "Get the average charge in a sphere.",
+  "docstring": "Get the average charge in a sphere.\n\nArgs:\n    chgcar: The charge density.\n    fcoord: The fractional coordinates of the center of the sphere.\n    radius: The radius of the sphere in Angstroms.\n\nReturns:\n    The average charge in the sphere.",
+  "aliases": [
+   "average",
+   "charge",
+   "get avg chg",
+   "get_avg_chg",
+   "sphere"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.get_ipr_in_window",
+  "short_name": "get_ipr_in_window",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "(bandstructure: 'BandStructure', procar: 'Procar', band_window: 'int' = 5) -> 'dict[Spin, npt.NDArray]'",
+  "description": "Get the inverse participation ratio (IPR) of the states in a given band window.",
+  "docstring": "Get the inverse participation ratio (IPR) of the states in a given band window.\n\nFor a given number of bands above and below the Fermi level, the IPR is calculated.\n\nArgs:\n    bandstructure: The bandstructure object.\n        The band just below the fermi level is used as the center of band window.\n    procar: The procar object.\n    band_window: The number of bands above and blow the fermi level to include in the search window.\n\nReturns:\n    dict[(int, int), npt.NDArray]: The IPR of the states in the band window keyed for each k-point and spin.",
+  "aliases": [
+   "band",
+   "get ipr in window",
+   "get_ipr_in_window",
+   "inverse",
+   "participation",
+   "ratio",
+   "states",
+   "window"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.get_labeled_inserted_structure",
+  "short_name": "get_labeled_inserted_structure",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "(sites: 'npt.NDArray', host_structure: 'Structure', working_ion: 'str', min_dist: 'float', clustering_tol: 'float', sm: 'StructureMatcher') -> 'list[tuple[list[float], int]]'",
+  "description": "Get a list of inserted structures and a list of structure matching labels.",
+  "docstring": "Get a list of inserted structures and a list of structure matching labels.\n\nThe process is as follows:\n1. Read in the list of candidate sites.\n2. Remove any sites that collide with the host and cluster the remaining sites.\n2. Group the candidate sites by symmetry by inserting the working ion and structure matching.\n3. Label the groups by structure matching.\n\nArgs:\n    sites: The candidate sites to insert.\n    host_structure: The host structure.\n    working_ion: The working ion.\n    min_dist: The minimum distance between the working ion and atoms in the host structure.\n    clustering_tol: The tolerance for clustering the candidate sites.\n    sm: The StructureMatcher object to use for grouping the sites.\n\nReturns:\n    list[tuple[list[float], int]]: A list of tuples of the form (fcoords, label)",
+  "aliases": [
+   "get labeled inserted structure",
+   "get_labeled_inserted_structure",
+   "inserted",
+   "labels",
+   "list",
+   "matching",
+   "structure",
+   "structures"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.get_local_extrema",
+  "short_name": "get_local_extrema",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "(chgcar: 'VolumetricData', find_min: 'bool' = True) -> 'npt.NDArray'",
+  "description": "Get all local extrema fractional coordinates in charge density.",
+  "docstring": "Get all local extrema fractional coordinates in charge density.\n\nSearching for local minimum by default. Note that sites are NOT grouped\nsymmetrically.\n\nArgs:\n    chgcar: charge density data\n    find_min (bool): True to find local minimum else maximum, otherwise\n        find local maximum.\n\nReturns:\n    extrema_coords (list): list of fractional coordinates corresponding\n        to local extrema.",
+  "aliases": [
+   "charge",
+   "coordinates",
+   "density",
+   "extrema",
+   "fractional",
+   "get local extrema",
+   "get_local_extrema",
+   "local"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.get_localized_states",
+  "short_name": "get_localized_states",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "(bandstructure: 'BandStructure', procar: 'Procar', band_window: 'int' = 7) -> 'Generator[tuple[int, int, int, float], None, None]'",
+  "description": "Find the (band, kpt, spin) index of the most localized state.",
+  "docstring": "Find the (band, kpt, spin) index of the most localized state.\n\nFind the band index with the lowest inverse participation ratio (IPR) in a small window\naround the fermi level.  Since some of the core states can be very localized,\nwe should only search near the band edges.  Report the result for each k-point and spin channel.\n\nArgs:\n    bandstructure: The bandstructure object.\n        The band just below the fermi level is used as the center of band window.\n    procar: The procar object.\n    band_window: The number of bands above and blow the fermi level to include in the search window.\n\nReturns:\n    tuple(int, int, int): Returns the (band, kpt, spin) index of the most localized state.",
+  "aliases": [
+   "band",
+   "find",
+   "get localized states",
+   "get_localized_states",
+   "index",
+   "localized",
+   "most",
+   "spin"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.get_plane_spacing",
+  "short_name": "get_plane_spacing",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "(lattice: 'npt.NDArray') -> 'list[float]'",
+  "description": "Compute the plane spacing of a lattice.",
+  "docstring": "Compute the plane spacing of a lattice.\n\nGet the cartesian spacing between periodic planes of a unit cell.\nCopied from materialsproject/pyrho.\n\n>>> get_plane_spacing([[1,0,0], [1,1,0], [0,0,2]])\n[0.7653..., 1.042..., 2.0]\n\nArgs:\nlattice:\n    List of lattice vectors in cartesian coordinates\n\nReturns:\nList[float]:\n    List where the k-th element is is the spacing of planes generated by all\n    lattice vectors EXCEPT the k-th one",
+  "aliases": [
+   "compute",
+   "get plane spacing",
+   "get_plane_spacing",
+   "lattice",
+   "plane",
+   "spacing"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.get_symmetry_labeled_structures",
+  "short_name": "get_symmetry_labeled_structures",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "() -> 'None'",
+  "description": "Deprecated.",
+  "docstring": "Deprecated.",
+  "aliases": [
+   "deprecated",
+   "get symmetry labeled structures",
+   "get_symmetry_labeled_structures"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.get_zfile",
+  "short_name": "get_zfile",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "(directory: 'Path', base_name: 'str', allow_missing: 'bool' = False) -> 'Path | None'",
+  "description": "Find gzipped or non-gzipped versions of a file in a directory listing.",
+  "docstring": "Find gzipped or non-gzipped versions of a file in a directory listing.\n\nArgs:\n    directory : A list of files in a directory.\n    base_name : The base name of file file to find.\n    allow_missing : Whether to error if no version of the file (gzipped or un-gzipped) can be found.\n\nReturns:\n    Path | None: A path to the matched file. If ``allow_missing=True``\n    and the file cannot be found, then ``None`` will be returned.",
+  "aliases": [
+   "directory",
+   "file",
+   "find",
+   "get zfile",
+   "get_zfile",
+   "gzipped",
+   "listing",
+   "versions"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.group_docs",
+  "short_name": "group_docs",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "(docs: 'Sequence', sm: 'StructureMatcher', get_structure: 'Callable', get_hash: 'Callable | None' = None) -> 'Generator[tuple[str | None, list], None, None]'",
+  "description": "Group docs by a simple hash followed by structure.",
+  "docstring": "Group docs by a simple hash followed by structure.\n\nAssuming that you have a basic representation of the defect, like `name`.\nWill first group the documents by name, then group them by the structure\nof their representation.\n\nArgs:\n    docs (list): list of generic documents/objects\n    sm (StructureMatcher): StructureMatcher object\n    get_hash (function): function to get the hash from the document,\n        this should be some kind of simple string representation.\n    get_structure (function): function to get the structure from the document\n\nReturns:\n    Generator of (name, group)",
+  "aliases": [
+   "docs",
+   "followed",
+   "group",
+   "group docs",
+   "group_docs",
+   "hash",
+   "simple",
+   "structure"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.remove_collisions",
+  "short_name": "remove_collisions",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "(fcoords: 'npt.NDArray', structure: 'Structure', min_dist: 'float' = 0.9) -> 'npt.NDArray'",
+  "description": "Removed points that are too close to existing atoms in the structure.",
+  "docstring": "Removed points that are too close to existing atoms in the structure.\n\nArgs:\n    fcoords (npt.ArrayLike): fractional coordinates of points to remove\n    structure (Structure): The structure in which to check for collisions.\n    min_dist(float): The minimum distance that a vertex needs to be\n        from existing atoms.\n\nReturns:\n    fcoord (numpy.ndarray): The filtered coordinates.",
+  "aliases": [
+   "atoms",
+   "close",
+   "existing",
+   "points",
+   "remove collisions",
+   "remove_collisions",
+   "removed",
+   "structure"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ },
+ {
+  "full_name": "pymatgen.analysis.defects.utils.sort_positive_definite",
+  "short_name": "sort_positive_definite",
+  "module": "pymatgen.analysis.defects.utils",
+  "kind": "function",
+  "signature": "(list_in: 'list', ref1: 'object', ref2: 'object', dist: 'Callable') -> 'tuple[tuple, tuple[float]]'",
+  "description": "Sort a list where we can only compute a positive-definite distance.",
+  "docstring": "Sort a list where we can only compute a positive-definite distance.\n\nSometimes, we can only compute a positive-definite distance between two objects.\n(E.g., the displacement between two structures). In these cases, standard\nsorting algorithms will not work. Here, we accept two reference points to give\nsome sense of direction. We then sort the list based on the distance between the\nreference points. Note: this only works if the list falls on a line of some sort.\n\nArgs:\n    list_in: The list to sort.\n    ref1: The first reference point, this will be the `zero` point.\n    ref2: The second reference point, this will determine the direction.\n    dist: Some positive definite distance function.\n\nReturns:\n    - the sorted list of objects.\n    - the signed distance in the chosen direction.",
+  "aliases": [
+   "compute",
+   "definite",
+   "distance",
+   "list",
+   "only",
+   "positive",
+   "sort",
+   "sort positive definite"
+  ],
+  "examples": [],
+  "surface": {},
+  "source": "docstring",
+  "related": [
+   "ChargeInsertionAnalyzer",
+   "CorrectionResult",
+   "QModel",
+   "TopographyAnalyzer",
+   "VoronoiPolyhedron"
+  ]
+ }
+]
