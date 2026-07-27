@@ -367,9 +367,58 @@ Code: `code/contamination_probe.py`
 
 ---
 
+## 8. A few-shot prompting baseline
+
+**Answers:** "Modern LLMs are strong few-shot learners, and many software
+libraries provide documentation with basic usage examples. Evaluating LLM agents
+with a few-shot prompting baseline constructed from these examples would provide
+a stronger comparison."
+
+The discovery channel serves worked usage examples mined from `omicverse`'s own
+docstrings — signature plus the runnable call the maintainers wrote — retrieved
+by the same embedding model into the same prompt frame as every other arm. No
+Beacon field is consulted. Seed 0, n = 38:
+
+| Arm | Pass@1 | vs. baseline |
+|---|---:|---:|
+| baseline | 71.1 % | — |
+| `doc_RAG` (signature + prose docstring) | 71.1 % | +0.0 |
+| **few-shot (documented usage examples)** | **78.9 %** | **+7.9** |
+| `prose_equivalent` (seven slots, as prose) | 89.5 % | +18.4 |
+| +Beacon | 92.1 % | +21.1 |
+
+```
+few-shot vs baseline    +7.9   CI[−7.9,+23.7]   7 v 4   p = 0.549
+few-shot vs doc_RAG     +7.9   CI[−5.3,+21.1]   5 v 2   p = 0.453
++Beacon vs few-shot    +13.2   CI[+0.0,+26.3]   6 v 1   p = 0.125
+```
+
+Few-shot is a materially stronger baseline than doc-RAG — a runnable call beats a
+prose docstring — and none of these contrasts reaches significance at one seed,
+so we report the ordering rather than separation.
+
+Two things the arm makes concrete. An agent shown `ov.pp.leiden(adata,
+resolution=1.0)` still does not know that `neighbors` must run first or that the
+result lands in `obs['leiden']`: a worked call demonstrates *how to invoke*, not
+the pre- and post-conditions. And the ceiling here is set by the library rather
+than by our implementation — of 494 public callables only **91 (18.4 %)** document
+a usage example at all, so a few-shot prompt built from library documentation can
+demonstrate that fraction of the surface and no more.
+
+`ov.space.register_function` was excluded from the index by name: Beacon's own
+decorator is re-exported into several public namespaces and its docstring
+demonstrates the seven fields, which would have shown this baseline the schema it
+is meant to control for.
+
+Data: `results/fewshot/*.csv`
+Code: `code/build_fewshot_index.py`, `code/fewshot_lookup.py`
+
+---
+
 ## Reproducing
 
 ```bash
+python code/build_fewshot_index.py       # rebuilds the few-shot example corpus
 python code/make_rebuttal_figures.py     # regenerates all four figures
 python code/mattools_table.py            # regenerates the MatTools table
 python code/verify_prose_parity.py       # checks the prose renderer is lossless
