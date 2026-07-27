@@ -220,9 +220,15 @@ def fig_mattools() -> None:
     ax.set_xticks(range(len(labels))); ax.set_xticklabels(labels, fontsize=8)
     ax.set_ylabel("Subtask accuracy (%)  ·  138 subtasks")
     ax.set_ylim(0, max(vals) * 1.28)
+    # Our no-retrieval bar sits above MatTools' published pure-agent figure of
+    # 18.4 % because the prompt and temperature are ours (0.0, theirs 0.7). Said
+    # in the caption because 18.4 also happens to be this arm's *task* accuracy,
+    # and a reader who knows the benchmark will otherwise read 21.0 as an error.
     ax.set_title("MatTools (third-party benchmark, third-party tasks, gpt-4o)\n"
                  "same retriever and prompt frame throughout; scored with the "
-                 "benchmark's own verifier", loc="left", fontsize=8.5)
+                 "benchmark's own verifier\nour no-retrieval arm is our own "
+                 "prompt at temperature 0, above the benchmark's published "
+                 "pure-agent 18.4 %", loc="left", fontsize=8.5)
     fig.savefig(OUT / "fig_mattools.png"); plt.close(fig)
     print("fig_mattools:", [f"{l.splitlines()[0]}={v:.2f}"
                             for l, v in zip(labels, vals)])
