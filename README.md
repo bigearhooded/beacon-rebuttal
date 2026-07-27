@@ -415,6 +415,30 @@ Code: `code/build_fewshot_index.py`, `code/fewshot_lookup.py`
 
 ---
 
+## 9. Figure 2, corrected
+
+**Answers:** "Figure 2 is unnecessarily small and could be enlarged ... there
+appear to be text overlaps in the figure, which negatively affect readability."
+
+![figure 2 revised](figures/fig2_headline_revised.png)
+
+Four changes, all regenerated from the per-trajectory grades by
+`code/fig_headline.py`:
+
+* **Enlarged** from 13.0 × 6.6 to 15.5 × 8.4 in, with panel fonts raised
+  throughout.
+* **Overlaps removed** — the model labels in panels (a) and (b) are rotated;
+  with eight models the horizontal labels collided.
+* **The eighth model added** (`qwen3.5-9b`), and the short label corrected from
+  `qwen-3B-a3b` to `qwen3.6-35b-a3b`.
+* **Bar and cell annotations corrected.** The submitted figure printed
+  `*_n_passed` — a *seed-0* count — on bars whose height is a multi-seed mean.
+  They disagree for every multi-seed model: `gpt-5.5` +Beacon sat at 91.2 %
+  labelled `37/38` = 97.4 %. Each bar now carries its own height, and the
+  per-layer cells carry the layer size rather than a seed-0 count.
+
+---
+
 ## Reproducing
 
 ```bash
